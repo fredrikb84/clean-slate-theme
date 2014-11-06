@@ -1,0 +1,38 @@
+<div class="social-icons">
+    {% unless settings.facebook_url == blank %}
+    <a href="{{ settings.facebook_url }}" title="{{ lang.facebook_title | def: 'Follow us on Facebook' | escape }}" target="_blank"><span class="panda-icon-social-facebook{{ settings.social_icons_style }}{% if settings.social_icons_color %} color{% endif%}"></span></a>
+    {% endunless %} 
+    {% unless settings.twitter_url == blank %}
+    <a href="{{ settings.twitter_url }}" title="{{ lang.twitter_title | def: 'Follow us on Twitter' | escape }}" target="_blank"><span class="panda-icon-social-twitter{{ settings.social_icons_style }}{% if settings.social_icons_color %} color{% endif%}"></span></a>
+    {% endunless %}
+    {% unless settings.pinterest_url == blank %}
+    <a href="{{ settings.pinterest_url }}" title="{{ lang.pinterest_title | def: 'Follow us on Pinterest' | escape }}" target="_blank"><span class="panda-icon-social-pinterest{{ settings.social_icons_style }}{% if settings.social_icons_color %} color{% endif%}"></span></a>
+    {% endunless %}
+    {% unless settings.googleplus_url == blank %}
+    <a href="{{ settings.googleplus_url }}" title="{{ lang.googleplus_title | def: 'Follow us on Google+' | escape }}" target="_blank"><span class="panda-icon-social-googleplus{{ settings.social_icons_style }}{% if settings.social_icons_color %} color{% endif%}"></span></a>
+    {% endunless %}
+    {% unless settings.instagram_url == blank %}
+    <a href="{{ settings.instagram_url }}" title="{{ lang.instagram_title | def: 'Follow us on Instagram' | escape }}" target="_blank"><span class="panda-icon-social-instagram{{ settings.social_icons_style }}{% if settings.social_icons_color %} color{% endif%}"></span></a>
+    {% endunless %}
+    {% unless settings.linkedin_url == blank %}
+    <a href="{{ settings.linkedin_url }}" title="{{ lang.linkedin_title | def: 'Follow us on LinkedIn' | escape }}" target="_blank"><span class="panda-icon-social-linkedin{{ settings.social_icons_style }}{% if settings.social_icons_color %} color{% endif%}"></span></a>
+    {% endunless %}
+    {% unless settings.flickr_url == blank %}
+    <a href="{{ settings.flickr_url }}" title="{{ lang.flickr_title | def: 'Follow us on Flickr' | escape }}" target="_blank"><span class="panda-icon-social-flickr{{ settings.social_icons_style }}{% if settings.social_icons_color %} color{% endif%}"></span></a>
+    {% endunless %}
+    {% unless settings.vimeo_url == blank %}
+    <a href="{{ settings.vimeo_url }}" title="{{ lang.vimeo_title | def: 'Follow us on Vimeo' | escape }}" target="_blank"><span class="panda-icon-social-vimeo{{ settings.social_icons_style }}{% if settings.social_icons_color %} color{% endif%}"></span></a>
+    {% endunless %}
+    {% unless settings.youtube_url == blank %}
+    <a href="{{ settings.youtube_url }}" title="{{ lang.youtube_title | def: 'Follow us on Youtube' | escape }}" target="_blank"><span class="panda-icon-social-youtube{{ settings.social_icons_style }}{% if settings.social_icons_color %} color{% endif%}"></span></a>
+    {% endunless %}
+    {% unless settings.tumblr_url == blank %}
+    <a href="{{ settings.tumblr_url }}" title="{{ lang.tumblr_title | def: 'Come visit our blog' | escape }}" target="_blank"><span class="panda-icon-social-tumblr{{ settings.social_icons_style }}{% if settings.social_icons_color %} color{% endif%}"></span></a>
+    {% endunless %}
+    {% unless settings.featured_blog == blank %}
+    <a href="/blogs/{{ settings.featured_blog }}.atom" title="{{ lang.blog_feed_title | def: 'Subscribe to our blog' | escape }}" target="_blank"><span class="panda-icon-social-feed{{ settings.social_icons_style }}{% if settings.social_icons_color %} color{% endif%}"></span></a>
+    {% endunless %}
+    {% if settings.display_email_icon %}
+    <a href="mailto:{{ shop.email }}" title="{{ lang.email_us | def: 'Email us' | escape }}" target="_blank"><span class="panda-icon-social-email{{ settings.social_icons_style }}{% if settings.social_icons_color %} color{% endif%}"></span></a>
+    {% endif %}
+</div>

@@ -1,0 +1,164 @@
+{% comment %}
+    We're going to reference the number of comments below, so let's hold it in a variable.
+{% endcomment %}
+{% assign number_of_reviews = product-review.reviews_count %}
+{% assign review_score = product-review.reviews_rating %}
+{% comment %}
+    If a review was just submitted and is not published yet, we have one more review to count and increase/decrease the rating accordingly
+{% endcomment %}
+{% if review and review.status != 'published' %}
+    {% assign number_of_reviews = product-review.reviews_count | plus: 1 %}
+    {% assign total_review_score = product-review.reviews_rating | times: product-review.reviews_count %}
+    {% assign review_score = review.rating | plus:total_review_score | divided_by: number_of_reviews | times: 10 | round | divided_by: 10 %} 
+{% endif %} 
+{% if shop.product_reviews_enabled %}
+    <div class="grid" id="reviews">
+    {% paginate product-review.reviews by 5 %}
+        <div class="grid-item large--one-third">
+            <div class="review-box">
+                <div itemprop="aggregateRating" itemscope itemtype="http://schema.org/AggregateRating">
+                    {% assign rating_percentage = review_score | minus: 1 | divided_by: 4 | times: 10 %}
+                    {% assign review_score_fifties = review_score | times: 2 | round | divided_by: 2 %}
+                    {% for i in (1..5) %}
+                        {% if i <= review_score_fifties %}
+                            <i class="panda-icon-ui-star color"></i>
+                        {% else %}
+                            {% assign lastpoint = i | minus:1 %}
+                            {% if lastpoint >= review_score_fifties %}
+                                <i class="panda-icon-ui-star-empty color"></i>
+                            {% else %}
+                                <i class="panda-icon-ui-star-half color"></i>
+                            {% endif %}
+                        {% endif %}
+                    {% endfor %}
+                    <meta itemprop="reviewCount" content="{{ number_of_reviews }}" />
+                    <meta itemprop="ratingCount" content="{{ number_of_reviews }}" />
+                    {% if review_score > 0 %}
+                        <span itemprop="ratingValue">{{ review_score }}</span>
+                    {% else %}
+                        <meta itemprop="ratingValue" content="0" />
+                    {% endif %}
+                    <p>
+                        {% if product-review.reviews_count > 0 %}
+                            {% assign reviews_singular = lang.review_singular | def:'review' %}
+                            {% assign reviews_plural = lang.review_plural | def:'reviews' %}
+                            {{ lang.based_on | def:'Based on' }} {{ number_of_reviews }} {{ number_of_reviews | pluralize: reviews_singular, reviews_plural }}
+                        {% else %}
+                            {{ lang.no_reviews_yet | def: 'No reviews yet' }}
+                        {% endif %}
+                    </p>
+                </div>
+                <hr>
+                <a href="#" id="review-toggle">{{ lang.write_a_review | def:'Write a review' }} &rsaquo;</a>
+            </div>
+        </div>
+        <div class="grid-item large--two-thirds">
+            <div id="write-review" class="hidden">
+                <h3>{{ lang.write_a_review | def:'Write a review' }}</h3>
+                {% form 'product_review' %}
+                    {% include 'form-errors-custom' %}
+                    {% if form.errors or form.posted_successfully %}
+                        <script>
+                            $(function() {
+                                {% if form.errors %}
+                                $('#write-review').show();
+                                {% endif %}
+                                window.location.hash = '#reviews';
+                            });
+                        </script>
+                    {% endif %}
+                    <div class="grid">
+                        <div class="grid-item large--one-half">
+                            <label for="review-author" class="hidden-label">{{ lang.name | def:'Name' }}</label>
+        					<input {% if form.errors contains "author" %} class="error"{% endif %} type="text" name="review[author]" placeholder="{{ lang.name | def:'Name' | escape }}" id="review-author" value="{{ form.author | escape }}" autocapitalize="words">
+        					
+                            <label for="review-email" class="hidden-label">{{ lang.email | def:'E-mail' }}</label>
+        					<input {% if form.errors contains "email" %} class="error"{% endif %} type="email" name="review[email]" placeholder="{{ lang.email | def:'E-mail' | escape }}" id="review-email" value="{{ form.email | escape }}" autocorrect="off" autocapitalize="off">
+                            {% comment %}
+                                Store owners can force only old customers to be able to leave reviews by using the order name as a "password"
+                            {% endcomment %}
+                            {% if shop.product_reviews_requires_verification %}
+                                <label for="review-order" class="hidden-label">{{ lang.order_no | def:'Order#' }}</label>
+        					    <input {% if form.errors contains "order" %} class="error"{% endif %} type="text" name="review[order]" placeholder="{{ lang.order_no | def:'Order#' | escape }}" id="review-order" value="{{ form.order | escape }}" autocorrect="off" autocapitalize="off">
+                            {% endif %}
+                            <div>
+                                <label>{{ lang.rating | def:'Rating' }}</label>
+                                <select id="review-rating" required name="review[rating]" class="{% if form.errors contains 'rating' %}error{% endif %}">
+                                    <option value="" {% if form.rating < 1 %}selected{% endif %}>---</option>
+                                    <option value="1" {% if form.rating == 1 %}selected{% endif %}>1</option>
+                                    <option value="2" {% if form.rating == 2 %}selected{% endif %}>2</option>
+                                    <option value="3" {% if form.rating == 3 %}selected{% endif %}>3</option>
+                                    <option value="4" {% if form.rating == 4 %}selected{% endif %}>4</option>
+                                    <option value="5" {% if form.rating == 5 %}selected{% endif %}>5</option>
+                                </select>
+                                {% comment %}
+                                This script requires product_helper.js to be loaded
+                                {% endcomment %}
+                                <script>
+                                    $(function() {
+                                        var onRatingChange = function(rating, selectEl) {
+                                        };
+                                        new shop.ReviewRatingSelector('review-rating', {'selected':'panda-icon-ui-star color active', 'active':'panda-icon-ui-star color', 'empty':'panda-icon-ui-star-empty color', 'onRatingChange':onRatingChange});
+                                    });
+                                </script>
+                            </div>
+                        </div>
+                        <div class="grid-item">
+                            <label for="review-title" class="hidden-label">{{ lang.title | def:'Title' }}</label>
+        					<input {% if form.errors contains "title" %} class="error"{% endif %} type="text" name="review[title]" placeholder="{{ lang.title | def:'Title' | escape }}" id="review-title" value="{{ form.title | escape }}" autocapitalize="words">
+        					
+                            <label for="review-body" class="hidden-label">{{ lang.message | def:'Message' }}</label>
+							<textarea {% if form.errors contains "body" %} class="error"{% endif %} name="review[body]" id="review-body" placeholder="{{ lang.message | def:'Message' | escape }}">{{ form.body }}</textarea>
+                        
+                            <p class="clearfix">
+                                <input type="submit" class="btn right" value="{{ lang.submit_review | def: 'Submit review' }}" />
+                            </p>
+                            {% if number_of_reviews > 0 %}
+                                <hr>
+                            {% endif %}
+                        </div>
+                    </div>
+                {% endform %}
+            </div>
+            {% if review and review.created_at %}
+                <p class="note form-success">
+                    {% if shop.product_reviews_moderated %}
+                        {{ lang.review_was_posted_successfully_but_moderated | def: 'Your review was posted successfully. We will publish it in a little while, as our product reviews are moderated.' }}
+                    {% else %}
+                        {{ lang.review_was_posted_successfully | def: 'Your review was posted successfully. Thank you!' }}
+                    {% endif %}
+                </p>
+            {% endif %}
+            {% if number_of_reviews > 0 %}
+                <ul>
+                {% if review and review.status != 'published' %}
+                    <li id="{{ review.id }}" class="review first{% if product-review.reviews_count == 0 %} last{% endif %}">
+                    {% include 'review' with review %}
+                    </li>
+                {% endif %}
+                {% for review in product-review.reviews %}
+                    <li id="{{ review.id }}" class="review{% unless number_of_reviews > product-review.reviews_count %}{% if forloop.first %} first{% endif %}{% endunless %}{% if forloop.last %} last {% endif %}">
+                    {% include 'review' with review %}
+                    </li>
+                {% endfor %}
+                </ul>
+            {% endif %}
+            {% comment %}Reviews are paginated{% endcomment %}
+            {% if paginate.pages > 1 %}
+                <hr>
+				<div class="text-center">
+					{% include 'pagination-custom' with '#reviews' %}
+				</div>
+            {% endif %}
+        </div>
+    {% endpaginate %}
+    </div>
+    <script>
+        $(function() {
+            $('#review-toggle').on('click', function(e) {
+                e.preventDefault();
+                $('#write-review').toggle();
+            });
+        });
+    </script>
+{% endif %}

@@ -1,0 +1,4 @@
+{% assign not_found_title = lang.404_not_found | def:'404 Page Not Found' %}
+{% title not_found_title %}
+<h1>{{ not_found_title }}</h1>
+<p>{{ lang.the_page_you_requested_does_not_exist | def:'The page you requested does not exist.' }}</p>

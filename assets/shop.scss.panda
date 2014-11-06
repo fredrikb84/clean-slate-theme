@@ -1,0 +1,1890 @@
+@import 'panda-icons'; //Common icons
+@import 'normalize.3.0.1'; //Normalize css
+/*
+    Responsive Grid Settings (based on csswizardry)
+*/
+$small: 480px;
+$medium: 768px;
+$large: 769px;
+$siteWidth: 1180px;
+$gutter: 24px;
+$gridGutter: 24px; // can be a %, but nested grids will have smaller margins because of it
+
+@import 'grid'; //Grid CSS
+
+/*============================================================================
+	Table of Contents
+
+	#General Variables
+	#Sass Mixins
+	#Basic Styles
+	#Helper Classes
+	#Typography
+	#Rich Text Editor
+	#Links and Buttons
+	#Lists
+	#Tables
+	#Images and Iframes
+	#Forms
+	#Icons
+	#Pagination
+	#Site Header
+	#Site Nav and Dropdowns
+	#Site Footer
+	#Product Grid and List Views
+	#Collection Filters
+	#Breadcrumbs
+	#Product Page
+	#Blogs and Comments
+	#Notes and Form Feedback
+	#Cart Page
+	#Social Sharing
+	#Checkout and Thank you page
+	#Modal
+==============================================================================*/
+
+/*============================================================================
+	#General Variables
+==============================================================================*/
+
+// General Colors
+$colorPrimary: {{ settings.color_primary }};
+$colorSecondary: {{ settings.color_secondary }};
+
+// Button colors
+$colorBtnPrimary: $colorPrimary;
+$colorBtnPrimaryHover: darken($colorBtnPrimary, 10%);
+$colorBtnPrimaryActive: darken($colorBtnPrimaryHover, 10%);
+
+$colorBtnSecondary: $colorSecondary;
+$colorBtnSecondaryHover: darken($colorBtnSecondary, 10%);
+$colorBtnSecondaryActive: darken($colorBtnSecondaryHover, 10%);
+
+// Text link colors
+$colorLink: $colorPrimary;
+$colorLinkHover: lighten($colorPrimary, 15%);
+
+// Text colors
+$colorTextBody: {{ settings.color_body_text }};
+
+// Backgrounds
+$colorBody: {{ settings.color_body_bg }};
+
+// Border colors
+$colorBorder: {{ settings.color_borders }};
+
+// Nav and dropdown link background
+$colorNav: #f2f2f2;
+$colorNavText: #333;
+
+// Site Footer
+$colorFooterBg: {{ settings.color_footer_bg }};
+$colorFooterText: {{ settings.color_footer_text }};
+
+// Helper colors
+$disabledGrey: #f6f6f6;
+$disabledBorder: darken($disabledGrey, 25%);
+$errorRed: #dc0000;
+$errorRedBg: lighten($errorRed, 55%);
+$successGreen: #0a942a;
+
+// Radius
+$radius: 3px;
+
+// Header Font
+$headerFontStack: {{ settings.base_font_family }};
+$headerFontWeight: 700;
+
+// Body Font
+$bodyFontStack: {{ settings.base_font_family }};
+$baseFontSize: {{ settings.base_font_size }}; // Henseforth known as 1em
+
+/*============================================================================
+	#Sass Mixins
+==============================================================================*/
+.clearfix {
+	&:after {
+		content: "";
+		display: table;
+		clear: both; }
+	*zoom: 1;
+}
+
+@mixin clearfix() {
+	&:after {
+		content: "";
+		display: table;
+		clear: both; }
+	*zoom: 1;
+}
+
+@mixin prefix($property, $value) {
+	-webkit-#{$property}: #{$value};
+	-moz-#{$property}: #{$value};
+	-ms-#{$property}: #{$value};
+	-o-#{$property}: #{$value};
+	#{$property}: #{$value};
+}
+@mixin transform($transform) {
+  @include prefix('transform', #{$transform});
+}
+@mixin transition($transition: 0.1s all) {
+	@include prefix('transition', #{$transition});
+}
+
+@mixin gradient($from, $to, $fallback) {
+	background: $fallback;
+	background: -moz-linear-gradient(top, $from 0%, $to 100%);
+	background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,$from), color-stop(100%,$to));
+	background: -webkit-linear-gradient(top, $from 0%, $to 100%);
+	background: -o-linear-gradient(top, $from 0%, $to 100%);
+	background: -ms-linear-gradient(top, $from 0%, $to 100%);
+	background: linear-gradient(top bottom, $from 0%, $to 100%);
+}
+
+@mixin backface($visibility: hidden) {
+	@include prefix('backface-visibility', #{$visibility});
+}
+
+@mixin box-sizing($box-sizing: border-box) {
+	-webkit-box-sizing: #{$box-sizing};
+	-moz-box-sizing: #{$box-sizing};
+	box-sizing: #{$box-sizing};
+}
+
+@function em($target, $context: $baseFontSize) {
+	@if $target == 0 {
+		@return 0;
+	}
+	@return $target / $context + 0em;
+}
+
+@function color-control($color) {
+	@if (lightness( $color ) > 40) {
+		@return #000;
+	}
+	@else {
+		@return #fff;
+	}
+}
+
+/*============================================================================
+	Dependency-free breakpoint mixin
+		- http://blog.grayghostvisuals.com/sass/sass-media-query-mixin/
+==============================================================================*/
+$min: min-width;
+$max: max-width;
+@mixin at-query ($constraint, $viewport1, $viewport2:null) {
+	@if $constraint == $min {
+		@media screen and ($min: $viewport1) {
+			@content;
+		}
+	} @else if $constraint == $max {
+		@media screen and ($max: $viewport1) {
+			@content;
+		}
+	} @else {
+		@media screen and ($min: $viewport1) and ($max: $viewport2) {
+			@content;
+		}
+	}
+}
+
+
+/*============================================================================
+	#Basic Styles
+==============================================================================*/
+html, body {
+	padding: 0;
+	margin: 0;
+}
+
+html {
+	background-color: $colorFooterBg;
+}
+
+body {
+	background-color: $colorBody;
+}
+
+/*============================================================================
+	#Helper Classes
+==============================================================================*/
+.left { float: left; }
+.right { float: right; }
+.text-center { text-align: center; }
+.text-right { text-align: right; }
+.hidden { display: none; }
+
+.display-table {
+	display: table;
+	table-layout: fixed;
+	width: 100%;
+}
+
+.display-table-cell {
+	display: table-cell;
+	vertical-align: middle;
+	float: none;
+}
+
+@include at-query ($min, $large) {
+	.large--display-table {
+		display: table;
+		table-layout: fixed;
+		width: 100%;
+	}
+
+	.large--display-table-cell {
+		display: table-cell;
+		vertical-align: middle;
+		float: none;
+	}
+}
+
+
+/*============================================================================
+	#Typography
+==============================================================================*/
+body,
+input,
+textarea,
+button,
+select {
+	font-size: $baseFontSize;
+	line-height: 1.6;
+	font-family: $bodyFontStack;
+	color: $colorTextBody;
+	font-weight: 300;
+	-webkit-font-smoothing: antialiased;
+	-webkit-text-size-adjust: 100%;
+}
+
+h1, h2, h3, h4, h5, h6 {
+	font-family: $headerFontStack;
+	font-weight: $headerFontWeight;
+	margin: 0 0 0.5em;
+	line-height: 1.4;
+
+	a {
+		text-decoration: none;
+		font-weight: inherit;
+	}
+}
+
+/*================ Use em() Sass function to declare font-size ================*/
+h1 {
+	font-size: em(36px);
+}
+
+h2 {
+	font-size: em(28px);
+}
+
+h3 {
+	font-size: em(22px);
+}
+
+h4 {
+	font-size: em(20px);
+}
+
+h5 {
+	font-size: em(16px);
+}
+
+h6 {
+	font-size: em(14px);
+}
+
+
+.h1 { @extend h1; }
+.h2 { @extend h2; }
+.h3 { @extend h3; }
+.h4 { @extend h4; }
+.h5 { @extend h5; }
+.h6 { @extend h6; }
+
+p {
+	margin: 0 0 $gutter/2 0;
+
+	img {
+		margin: 0;
+	}
+}
+
+em {
+	font-style: italic;
+}
+
+b, strong {
+	font-weight: bold;
+}
+
+small {
+	font-size: 80%;
+}
+
+sup, sub {
+	position: relative;
+	font-size: 60%;
+	vertical-align: baseline;
+}
+sup {
+	top: -0.5em;
+}
+
+sub {
+	bottom: -0.5em;
+}
+
+/*================ Blockquotes ================*/
+blockquote {
+	font-size: 1.125em;
+	line-height: 1.45;
+	font-style: italic;
+	margin: 0 0 $gutter;
+	padding: $gutter/2 $gutter;
+	border-left: 1px solid $colorBorder;
+
+	p {
+		margin-bottom: 0;
+
+		& + cite {
+			margin-top: $gutter/2;
+		}
+	}
+
+	cite {
+		display: block;
+		font-size: 0.75em;
+
+		&:before {
+			content: "\2014 \0020";
+		}
+	}
+}
+
+/*================ Code ================*/
+code, pre {
+	background-color: #faf7f5;
+	font-family: Consolas,monospace;
+	font-size: 1em;
+	border: 0 none;
+	padding: 0 2px;
+	color: #51ab62;
+}
+
+pre {
+	overflow: auto;
+	padding: $gutter/2;
+	margin: 0 0 $gutter;
+}
+
+/*================ Horizontal Rules ================*/
+hr {
+	clear: both;
+	border-top: solid $colorBorder;
+	border-width: 1px 0 0;
+	margin: $gutter 0;
+	height: 0;
+
+	&.hr--small {
+		margin: $gutter/2 0;
+	}
+
+	&.hr--clear {
+		border-top-color: transparent;
+	}
+}
+
+/*================ Section Headers ================*/
+.section-header {
+	margin-bottom: $gutter/1.5;
+}
+
+@include at-query ($min, $large) {
+	.section-header {
+		display: table;
+		width: 100%;
+	}
+
+	.section-header--title {
+		margin-bottom: $gutter/2.5;
+	}
+
+	.section-header--left {
+		display: table-cell;
+		vertical-align: middle;
+		margin-bottom: 0;
+
+		h1, h2, h3, h4,
+		.h1, .h2, .h3, .h4 {
+			margin-bottom: 0;
+		}
+	}
+
+	.section-header--right {
+		display: table-cell;
+		vertical-align: middle;
+		text-align: right;
+		width: 335px;
+
+		@include at-query ($max, $medium) {
+			margin-bottom: $gutter;
+		}
+	}
+}
+
+.section-header--right {
+
+	.form-horizontal,
+	.collection-view {
+		display: inline-block;
+		vertical-align: middle;
+	}
+
+	@include at-query ($min, $small+1) {
+		label + select,
+		.collection-view {
+			margin-left: $gutter/2;
+		}
+	}
+}
+
+.collection-view {
+	display: inline-block;
+	border: 1px solid $colorBorder;
+	border-radius: $radius;
+	padding: 11px;
+	height: 37px; // same as form elements
+
+	/*================ Only show on larger screens ================*/
+	@include at-query ($min, $large) {
+		display: inline-block;
+	}
+
+	a {
+		display: block;
+		float: left;
+		opacity: 0.7;
+		cursor: pointer;
+
+		& + a {
+			margin-left: 10px;
+		}
+
+		&.collection-view--active {
+			opacity: 1;
+			cursor: default;
+		}
+	}
+
+	img {
+		display: block;
+		opacity: inherit;
+	}
+}
+
+/*============================================================================
+	#Rich Text Editor
+==============================================================================*/
+.rte {
+	margin-bottom: $gutter/2;
+
+	// Add some top margin to headers from the rich text editor
+	h1, h2, h3, h4, h5, h6 {
+		margin-top: 2em;
+
+		&:first-child {
+			margin-top: 0;
+		}
+	}
+
+	& > div {
+		margin-bottom: $gutter/2;
+	}
+
+	ul, ol {
+		margin-left: 35px;
+	}
+
+	ul {
+		@extend ul.disc;
+	}
+
+	li {
+		margin-bottom: 0.4em;
+	}
+}
+
+.rte-header {
+	margin-bottom: 0;
+}
+
+/*============================================================================
+	#Links and Buttons
+==============================================================================*/
+a {
+	color: $colorLink;
+	text-decoration: underline;
+	background: transparent;
+}
+
+a:hover,
+a:focus {
+	color: $colorLinkHover;
+}
+
+button {
+	overflow: visible;
+}
+
+button[disabled],
+html input[disabled] {
+	cursor: default;
+}
+
+.btn {
+	display: inline-block;
+	padding: 8px 10px;
+	margin: 0;
+	line-height: 1.42;
+	font-weight: bold;
+	text-decoration: none;
+	text-align: center;
+	vertical-align: middle;
+	white-space: nowrap;
+	cursor: pointer;
+	border: 1px solid transparent;
+	@include prefix('user-select', 'none');
+	-webkit-appearance: none;
+	-moz-appearance: none;
+	border-radius: $radius;
+
+	&.btn--small {
+		padding: 4px 5px;
+		font-size: em(12px);
+	}
+
+	&.btn--large {
+		padding: 12px 15px;
+		font-size: em(16px);
+	}
+
+	&.btn--full {
+		width: 100%;
+	}
+
+	/*================ Set primary button colors - can override later ================*/
+	background-color: $colorBtnPrimary;
+	color: #fff;
+
+	&:hover {
+		background-color: $colorBtnPrimaryHover;
+		color: #fff;
+	}
+
+	&:active,
+	&:focus {
+	 background-color: $colorBtnPrimaryActive;
+	 color: #fff;
+	}
+
+	&[disabled],
+	&.disabled {
+		cursor: default;
+		color: $disabledBorder;
+		background-color: $disabledGrey;
+	}
+}
+
+.btn-secondary,
+input.btn-secondary {
+	@extend .btn;
+	background-color: $colorBtnSecondary;
+
+	&:hover {
+		background-color: $colorBtnSecondaryHover;
+		color: #fff;
+	}
+
+	&:active,
+	&:focus {
+	 background-color: $colorBtnSecondaryActive;
+	 color: #fff;
+	}
+}
+
+/*================ Force an input/button to look like a text link ================*/
+.text-link {
+	display: inline!important;
+	color: $colorLink!important;
+	border: 0 none!important;
+	background: none!important;
+	padding: 0!important;
+	margin: 0!important;
+}
+.text-link:hover {
+    color: $colorLinkHover!important;
+}
+
+/*============================================================================
+	#Lists
+==============================================================================*/
+ul, ol {
+	margin: 0 0 $gutter;
+	padding: 0;
+}
+
+ul { list-style: none outside; }
+ol { list-style: decimal; }
+ul ul, ul ol,
+ol ol, ol ul { margin: 4px 0 5px 20px; }
+li { margin-bottom: 0.25em; }
+
+ol, ul.square, ul.disc { margin-left: 20px; }
+ul.square { list-style: square outside; }
+ul.disc { list-style: disc outside; }
+ol.alpha { list-style: lower-alpha outside; }
+
+.inline-list li {
+	display: inline-block;
+	margin-bottom: 0;
+}
+
+/*============================================================================
+	#Tables
+==============================================================================*/
+table {
+	border-collapse: collapse;
+	border-spacing: 0;
+}
+
+table.full {
+	width: 100%;
+	margin-bottom: 1em;
+}
+
+th {
+	font-weight: bold;
+}
+
+th, td {
+	text-align: left;
+	padding: $gutter/2;
+	border: 1px solid $colorBorder;
+}
+
+
+/*============================================================================
+	#Images and Iframes
+==============================================================================*/
+img {
+	border: 0 none;
+}
+
+svg:not(:root) {
+	overflow: hidden;
+}
+
+img.auto,
+.grid-item img,
+.grid-item iframe {
+	max-width: 100%;
+}
+
+.video-wrapper {
+	position: relative;
+	overflow: hidden;
+	max-width: 100%;
+	padding-bottom: 56.25%;
+	height: 0;
+	height: auto;
+
+	iframe {
+		position: absolute;
+		top: 0;
+		left: 0;
+		width: 100%;
+		height: 100%;
+	}
+}
+
+
+/*============================================================================
+	#Forms
+==============================================================================*/
+form {
+	margin-bottom: $gutter;
+}
+
+button,
+input[type="text"],
+input[type="search"],
+input[type="password"],
+input[type="email"],
+input[type="file"],
+input[type="number"],
+input[type="tel"],
+input[type="submit"],
+textarea {
+	-webkit-appearance: none;
+	-moz-appearance: none;
+}
+
+input,
+textarea,
+select,
+fieldset {
+	border-radius: $radius;
+	max-width: 100%;
+
+	&.input-full {
+		width: 100%;
+	}
+}
+
+input,
+select,
+textarea {
+	padding: 8px 10px;
+	line-height: 1.42;
+}
+
+fieldset {
+	border: 1px solid $colorBorder;
+	padding: $gutter/2;
+}
+
+legend {
+	border: 0;
+	padding: 0;
+}
+
+optgroup {
+	font-weight: bold;
+}
+
+input {
+	display: inline-block;
+	width: auto;
+}
+
+button,
+input[type="submit"] {
+	cursor: pointer;
+}
+
+input[type="submit"] {
+	@extend .btn;
+}
+
+/*================ Input width and border ================*/
+input[type="text"],
+input[type="search"],
+input[type="password"],
+input[type="email"],
+input[type="file"],
+input[type="number"],
+input[type="tel"],
+textarea,
+select {
+	border: 1px solid $colorBorder;
+	width: 100%;
+	max-width: 100%;
+	display: block;
+	margin: 0 0 1em;
+
+	&:focus {
+		border: 1px solid darken($colorBorder, 10%);
+	}
+
+	&[disabled],
+	&.disabled {
+		cursor: default;
+		background-color: $disabledGrey;
+		border-color: $disabledBorder;
+	}
+}
+
+textarea {
+	min-height: 100px;
+}
+
+input[type="checkbox"],
+input[type="radio"] {
+	display: inline;
+	margin: 0;
+	padding: 0;
+}
+
+select {
+	-webkit-appearance: none;
+		 -moz-appearance: none;
+					appearance: none;
+	background-position: right center;
+	background: {
+		image: url("data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0idXRmLTgiPz4NCjwhLS0gR2VuZXJhdG9yOiBBZG9iZSBJbGx1c3RyYXRvciAxNy4xLjAsIFNWRyBFeHBvcnQgUGx1Zy1JbiAuIFNWRyBWZXJzaW9uOiA2LjAwIEJ1aWxkIDApICAtLT4NCjwhRE9DVFlQRSBzdmcgUFVCTElDICItLy9XM0MvL0RURCBTVkcgMS4xLy9FTiIgImh0dHA6Ly93d3cudzMub3JnL0dyYXBoaWNzL1NWRy8xLjEvRFREL3N2ZzExLmR0ZCI+DQo8c3ZnIHZlcnNpb249IjEuMSIgaWQ9IkxheWVyXzEiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyIgeG1sbnM6eGxpbms9Imh0dHA6Ly93d3cudzMub3JnLzE5OTkveGxpbmsiIHg9IjBweCIgeT0iMHB4Ig0KCSB3aWR0aD0iNy43cHgiIGhlaWdodD0iNC4zcHgiIHZpZXdCb3g9IjAgMCA3LjcgNC4zIiBlbmFibGUtYmFja2dyb3VuZD0ibmV3IDAgMCA3LjcgNC4zIiB4bWw6c3BhY2U9InByZXNlcnZlIj4NCjxwYXRoIGZpbGw9IiM5OTk5OTkiIGQ9Ik03LjEsMC4xQzYuNywwLjUsMy45LDMuMiwzLjksMy4yUzEsMC41LDAuNiwwLjFTMCwwLjcsMCwwLjdsMy45LDMuNmwzLjgtMy42QzcuNywwLjcsNy41LTAuMyw3LjEsMC4xeiIvPg0KPC9zdmc+DQo="); // svg base64 encoded arrow
+		repeat: no-repeat;
+		position: right 10px center;
+		color: transparent;
+	}
+	padding-right: 28px;
+	text-indent: 0.01px;
+	text-overflow: '';
+	cursor: pointer;
+
+	/*================ Hide the svg arrow in IE9 and below ================*/
+	.ie9 &,
+	.lt-ie9 & {
+		padding-right: 10px;
+		background-image: none;
+	}
+}
+
+select::-ms-expand {
+		display: none;
+}
+
+/*================ Form labels ================*/
+label,
+legend {
+	display: block;
+	margin-bottom: 2px;
+	font-weight: bold;
+
+	&.inline {
+		display: inline;
+	}
+
+	.form-horizontal &.hidden-label,
+	&.hidden-label {
+		height: 0;
+		width: 0;
+		margin-bottom: 0;
+		overflow: hidden;
+
+		.ie9 &,
+		.lt-ie9 & {
+			height: auto;
+			margin-bottom: 2px;
+			overflow: visible;
+			width:auto;
+		}
+	}
+}
+
+/*================ We don't want the same label treatment for checkboxes/radios ================*/
+input[type="checkbox"] + label,
+input[type="radio"] + label {
+	font-weight: normal;
+}
+
+label[for] {
+	cursor: pointer;
+}
+
+.label-hint {
+	color: #999;
+}
+
+/*================ Horizontal Form ================*/
+form.form-horizontal,
+.form-horizontal {
+	margin-bottom: 0;
+
+	input[type="text"],
+	input[type="search"],
+	input[type="password"],
+	input[type="email"],
+	input[type="file"],
+	input[type="number"],
+	input[type="tel"],
+	textarea,
+	select,
+	label {
+		display: inline-block;
+		margin-bottom: 0;
+		width: auto;
+	}
+}
+
+/*================ Error styles ================*/
+input[type="text"],
+input[type="search"],
+input[type="password"],
+input[type="email"],
+input[type="file"],
+input[type="number"],
+input[type="tel"],
+textarea {
+	&.error {
+		border-color: $errorRed;
+		background-color: $errorRedBg;
+		color: $errorRed;
+	}
+}
+
+label.error {
+	color: $errorRed;
+}
+
+
+/*================ Input Group ================*/
+.input-group {
+	position: relative;
+	display: table;
+	border-collapse: separate;
+
+	.input-group-field:first-child,
+	.input-group-btn:first-child,
+	.input-group-btn:first-child > .btn,
+	input[type="hidden"]:first-child + .input-group-field,
+	input[type="hidden"]:first-child + .input-group-btn > .btn {
+		border-radius: $radius 0 0 $radius;
+	}
+
+	.input-group-field:last-child,
+	.input-group-btn:last-child > .btn {
+	 border-radius: 0 $radius $radius 0;
+	}
+
+	input {
+		// Nasty Firefox hack for inputs http://davidwalsh.name/firefox-buttons
+		&::-moz-focus-inner {
+			border: 0;
+			padding: 0;
+			margin-top: -1px;
+			margin-bottom: -1px;
+		}
+	}
+}
+
+.input-group-field,
+.input-group-btn {
+	display: table-cell;
+	vertical-align: middle;
+	margin: 0;
+}
+
+.input-group .btn,
+.input-group .input-group-field {
+	height: 37px;
+}
+
+.input-group .input-group-field {
+	width: 100%;
+	margin-bottom: 0;
+}
+
+.input-group-btn {
+	position: relative;
+	white-space: nowrap;
+	width: 1%;
+	padding: 0;
+}
+
+.form-spacer {
+	margin: 0 $gutter/2;
+}
+
+/*============================================================================
+	#Icons
+==============================================================================*/
+.payment-icons {
+	@include prefix('user-select', 'none');
+	cursor: default;
+
+	i {
+		margin: 0 $gutter/4 $gutter/4;
+		color: {{ settings.color_footer_social_link }};
+		cursor: default;
+		font-size: 30px;
+		line-height: 50px;
+	}
+}
+
+.social-icons a {
+	margin: 0 $gutter/2 $gutter/2;
+	vertical-align: middle;
+
+	@include at-query ($min, $small+1) {
+		margin-left: 0;
+	}
+
+	span {
+		font-size: 30px;
+		line-height: 45px;
+	}
+
+	color: {{ settings.color_footer_social_link }};
+
+	&:hover {
+		color: darken({{ settings.color_footer_social_link }}, 10%);
+	}
+}
+
+/*============================================================================
+	#Pagination
+==============================================================================*/
+.pagination {
+	margin-bottom: 1em;
+}
+
+/*================ Custom Pagination ================*/
+.pagination-custom {
+	display: inline-block;
+	padding-left: 0;
+	margin: 0 0 $gutter;
+	border-radius: $radius;
+}
+
+.pagination-custom > li {
+	display: inline;
+}
+
+.pagination-custom > li > a,
+.pagination-custom > li > span {
+	position: relative;
+	float: left;
+	padding: 5px 10px;
+	margin-left: -1px;
+	line-height: 1.42;
+	text-decoration: none;
+	border: 1px solid $colorBorder;
+}
+
+.pagination-custom > li:first-child > a,
+.pagination-custom > li:first-child > span {
+	margin-left: 0;
+	border-bottom-left-radius: 4px;
+	border-top-left-radius: 4px;
+}
+
+.pagination-custom > li:last-child > a,
+.pagination-custom > li:last-child > span {
+	border-top-right-radius: 4px;
+	border-bottom-right-radius: 4px;
+}
+
+.pagination-custom > li > a:hover,
+.pagination-custom > li > span:hover,
+.pagination-custom > li > a:focus,
+.pagination-custom > li > span:focus {
+	// hover color
+}
+
+.pagination-custom > .active > a,
+.pagination-custom > .active > span,
+.pagination-custom > .active > a:hover,
+.pagination-custom > .active > span:hover,
+.pagination-custom > .active > a:focus,
+.pagination-custom > .active > span:focus {
+	z-index: 2;
+	cursor: default;
+	color: $colorTextBody;
+}
+
+.pagination-custom > .disabled > span,
+.pagination-custom > .disabled > a,
+.pagination-custom > .disabled > a:hover,
+.pagination-custom > .disabled > a:focus {
+	color: #999999;
+	cursor: not-allowed;
+}
+
+.pagination-custom-lg > li > a,
+.pagination-custom-lg > li > span {
+	padding: 10px 16px;
+	font-size: em(18px);
+}
+
+.pagination-custom-lg > li:first-child > a,
+.pagination-custom-lg > li:first-child > span {
+	border-bottom-left-radius: 6px;
+	border-top-left-radius: 6px;
+}
+
+.pagination-custom-lg > li:last-child > a,
+.pagination-custom-lg > li:last-child > span {
+	border-top-right-radius: 6px;
+	border-bottom-right-radius: 6px;
+}
+
+.pagination-custom-sm > li > a,
+.pagination-custom-sm > li > span {
+	padding: 5px 10px;
+	font-size: em(12px);
+}
+
+.pagination-custom-sm > li:first-child > a,
+.pagination-custom-sm > li:first-child > span {
+	border-bottom-left-radius: 3px;
+	border-top-left-radius: 3px;
+}
+
+.pagination-custom-sm > li:last-child > a,
+.pagination-custom-sm > li:last-child > span {
+	border-top-right-radius: 3px;
+	border-bottom-right-radius: 3px;
+}
+
+
+/*============================================================================
+	#Site Header
+==============================================================================*/
+.site-header {
+	padding: $gutter/2 0;
+
+	@include at-query ($min, $large) {
+		padding: $gutter 0;
+	}
+
+	@include at-query ($min, $large) {
+		.grid {
+			display: table;
+			table-layout: fixed;
+			width: 100%;
+
+			& > .grid-item {
+				float: none;
+				display: table-cell;
+				vertical-align: middle;
+			}
+		}
+	}
+}
+
+.header-logo {
+	text-align: center;
+	font-size: em(40px);
+	margin: 0 auto $gutter/2;
+	max-width: 100%;
+	height:auto;
+
+	@include at-query ($min, $large) {
+		margin-bottom: 0;
+	}
+
+	a,
+	a:hover,
+	a:focus {
+		text-decoration: none;
+	}
+
+	a, img {
+		display: block;
+	}
+
+	img {
+		margin: 0 auto;
+	}
+}
+
+.site-header--text-links {
+	margin-bottom: 0;
+}
+
+.search-bar {
+	max-width: 100%;
+
+	@include at-query ($max, $medium) {
+		margin: 0 auto;
+	}
+}
+
+/*============================================================================
+	#Site Nav and Dropdowns
+==============================================================================*/
+.nav-bar {
+	background-color: $colorNav;
+
+	a {
+		color: $colorNavText;
+
+		&:hover,
+		&:active,
+		&:focus {
+			color: darken($colorNavText, 15%);
+		}
+	}
+
+	ul {
+		margin: 0;
+	}
+
+	li {
+		margin: 0;
+	}
+}
+
+.site-nav {
+	font-size: em(16px);
+	cursor: default;
+
+	li {
+		margin: 0;
+		display: block;
+	}
+
+	& > li {
+		position: relative;
+		display: inline-block;
+
+		&:first-child a {
+			padding-left: 0;
+		}
+	}
+
+	a {
+		display: block;
+		text-decoration: none;
+		padding: $gutter/2;
+		white-space: nowrap;
+	}
+
+	@include at-query ($max, $medium) {
+		margin: 0 auto;
+		text-align: center;
+	}
+}
+
+.site-nav--active > a {
+	font-weight: bold;
+}
+
+/*================ Dropdowns ================*/
+.site-nav--dropdown {
+	display: none;
+	position: absolute;
+	left: 0;
+	z-index: 5;
+
+	.site-nav--has-dropdown:hover &,
+	.site-nav--has-dropdown.nav-hover &,
+	.nav-focus + & {
+		display: block;
+	}
+
+	a {
+		background-color: $colorNav;
+
+		&:hover,
+		&:active,
+		&:focus {
+			background-color: darken($colorNav, 10%);
+		}
+	}
+}
+
+/*================ Search bar in header ================*/
+.nav-search {
+	position: relative;
+	padding: 7px 0;
+
+	@include at-query ($max, $medium) {
+		padding: 0 0 $gutter/2;
+		margin: 0 auto;
+		text-align: center;
+	}
+
+	.input-group,
+	.input-group-field {
+		margin-bottom: 0;
+	}
+}
+
+.highlight {
+    background-color: #e1e900;
+}
+
+
+/*============================================================================
+	#Site Footer
+==============================================================================*/
+.site-footer {
+	background-color: $colorFooterBg;
+	border-top: 1px solid $colorBorder;
+	padding: $gutter 0;
+	color: $colorFooterText;
+
+	@include at-query ($min, $large) {
+		padding: $gutter*2 0;
+	}
+}
+
+/*============================================================================
+	#Product Grid and List Views
+==============================================================================*/
+.sold-out {
+
+}
+
+.on-sale {
+
+}
+
+.product-grid-item {
+	display: block;
+	text-decoration: none;
+}
+
+.product-grid-image, .collection-grid-image {
+	display: block;
+	margin: 0 auto $gutter/2;
+
+	img {
+		display: block;
+		margin: 0 auto;
+	}
+}
+
+/*============================================================================
+	#Collection Filters
+==============================================================================*/
+.active-filter {
+	font-weight: bold;
+}
+
+/*============================================================================
+	#Breadcrumbs
+==============================================================================*/
+.breadcrumb {
+	margin-bottom: $gutter;
+
+	a,
+	span {
+		display: inline-block;
+		padding: $gutter/2 7px $gutter/2 0;
+		margin-right: 7px;
+
+		&:first-child {
+			padding-left: 0;
+		}
+	}
+}
+
+
+/*============================================================================
+	#Product Page
+==============================================================================*/
+.product-variants {
+	display: none;
+
+	.no-js & {
+		display: block;
+	}
+}
+
+.rating-wrapper {
+    font-size: em(20px);
+    .active:before {
+        color: $colorLink;
+    }
+}
+
+.key-features li:before {
+    content: "✓";
+    margin-right: 10px;
+}
+.key-features {
+    margin-top: $gutter/2;
+    li {
+        font-size: em(16px);
+    }
+}
+
+.review-box {
+    border: 1px solid $colorBorder;
+    border-radius: $radius;
+    padding: $gutter;
+    margin-bottom: $gutter;
+    hr {
+        margin:$gutter/2 0;
+    }
+}
+
+@include at-query($min, $large) {
+	.selector-wrapper,
+	.product-variants {
+		select {
+			max-width: 40%;
+		}
+	}
+}
+
+.product-photo-container {
+	margin-bottom: $gutter;
+}
+
+.product-photo-container,
+.product-photo-thumbs {
+	a, img {
+		display: block;
+		margin: 0 auto;
+	}
+
+	li {
+		margin-bottom: $gutter;
+	}
+}
+.product-review-count {
+	white-space: nowrap;
+}
+.review {
+	margin-bottom: $gutter;
+
+	& + & {
+		border-top: 1px solid $colorBorder;
+		padding-top: $gutter;
+	}
+}
+/*============================================================================
+	#Blogs and Comments
+==============================================================================*/
+.comment {
+	margin-bottom: $gutter;
+
+	& + & {
+		border-top: 1px solid $colorBorder;
+		padding-top: $gutter;
+	}
+}
+
+
+/*============================================================================
+	#Notes and Form Feedback
+==============================================================================*/
+.note,
+.errors {
+	border-radius: $radius;
+	padding: $gutter/2;
+	margin-bottom: $gutter/2;
+	border: 1px solid transparent;
+
+	ul,
+	ol {
+		margin-top: 0;
+		margin-bottom: 0;
+	}
+
+	li:last-child {
+		margin-bottom: 0;
+	}
+
+	p {
+		margin-bottom: 0;
+	}
+}
+
+.note {
+	border-color: $colorBorder;
+}
+
+.errors {
+	ul {
+		list-style: disc outside;
+		margin-left: 20px;
+	}
+}
+
+.form-success {
+	color: $successGreen;
+	background-color: lighten($successGreen, 65%);
+	border-color: $successGreen;
+}
+
+.form-error,
+.errors {
+	color: $errorRed;
+	background-color: $errorRedBg;
+	border-color: $errorRed;
+}
+
+
+/*============================================================================
+	#Cart Page
+==============================================================================*/
+.cart-row {
+	margin-top: $gutter;
+	padding-top: $gutter;
+	border-top: 1px solid $colorBorder;
+
+	&:first-child {
+		margin-top: 0;
+	}
+
+	&:first-child {
+		padding-top: 0;
+		border-top: 0 none;
+	}
+
+	a {
+		color: $colorTextBody;
+
+		&:hover {
+			color: $colorPrimary;
+		}
+	}
+}
+
+.cart-subtotal {
+	margin-bottom: $gutter;
+}
+
+.cart-subtotal--price {
+	margin: 0 0 0 $gutter/3;
+	display: inline;
+}
+.quantity-selector-wrapper {
+    margin-bottom: $gutter/2;
+    max-width:140px;
+    
+    .quantity-selector {
+        text-align: center;
+        border-right:none;
+        border-left:none;
+        min-width: 50px;
+    }
+    .btn {
+        width: 37px;
+        text-align:center;
+        background-color: #fff;
+        color: #000000;
+        border: 1px solid $colorBorder;
+    }
+}
+@include at-query ($max, $small) {
+    .template-cart .quantity-selector-wrapper input {
+        min-width: 0px;
+    }
+	.template-cart .quantity-selector-wrapper .btn {
+        width:auto;
+        padding-left:7px;
+        padding-right:7px;
+        border: 0;
+    }
+}
+
+/*==============================================================
+    #Social Sharing
+================================================================*/
+/*=== Social share buttons ===*/
+$shareButtonHeight: 22px;
+$shareButtonCleanHeight: 30px;
+$shareCountBg: #fff;
+$shareBorderColor: #ececec;
+
+.social-sharing {
+  font-family: "HelveticaNeue", "Helvetica Neue", Helvetica, Arial, sans-serif;
+  padding-top: $gutter/2;
+
+  a {
+    display: inline-block;
+    color: #fff;
+    border-radius: 2px;
+    margin: 0 10px 10px 0;
+    height: $shareButtonHeight;
+    line-height: $shareButtonHeight;
+    text-decoration: none;
+    font-weight: normal;
+
+    &:hover {
+      color: #fff;
+    }
+  }
+
+  span {
+    display: inline-block;
+    vertical-align: top;
+    height: $shareButtonHeight;
+    line-height: $shareButtonHeight;
+    font-size: 12px;
+  }
+
+  i {
+    padding: 0 5px 0 10px;
+
+    &:before {
+      line-height: $shareButtonHeight;
+    }
+  }
+}
+
+.share-title {
+  font-weight: 900;
+  font-size: 12px;
+  padding-right: 10px;
+}
+
+.share-facebook {
+  background-color: #3b5998;
+
+  &:hover {
+    background-color: darken(#3b5998, 10%);
+  }
+}
+
+.share-fancy {
+  background-color: #4999dc;
+
+  &:hover {
+    background-color: darken(#4999dc, 10%);
+  }
+}
+
+.share-twitter {
+  background-color: #00aced;
+
+  &:hover {
+    background-color: darken(#00aced, 10%);
+  }
+}
+
+.share-pinterest {
+  background-color: #cb2027;
+
+  &:hover {
+    background-color: darken(#cb2027, 10%);
+  }
+}
+
+.share-google {
+  background-color: #dd4b39;
+
+  &:hover {
+    background-color: darken(#dd4b39, 10%);
+  }
+}
+
+.share-count {
+  position: relative;
+  background-color: $shareCountBg;
+  padding: 0 8px;
+  margin-right: -2px;
+  font-size: 14px;
+  line-height: $shareButtonHeight - 2;
+  color: #333;
+  border-radius: 0 2px 2px 0;
+  border: 1px solid $shareBorderColor;
+  opacity: 0;
+  @include transition(opacity 0.2s ease-in);
+
+  &.is-loaded {
+    opacity: 1;
+  }
+
+  &:before,
+  &:after {
+    content: '';
+    display: block;
+    position: absolute;
+    top: 50%;
+    margin-top: -6px;
+    width: 0;
+    height: 0;
+    border-top: 6px solid transparent;
+    border-bottom: 6px solid transparent;
+    border-right: 6px solid;
+  }
+
+  &:before {
+    left: -6px;
+    border-right-color: $shareBorderColor;
+  }
+
+  &:after {
+    left: -5px;
+    border-right-color: $shareCountBg;
+  }
+
+  a:hover & {
+    background-color: darken($shareCountBg, 4%);
+
+    &:after {
+      border-right-color: darken($shareCountBg, 4%);
+    }
+  }
+
+}
+
+/*==============================================================
+    #Checkout and Thank you page
+================================================================*/
+#checkout_payment_methods li {
+    margin: $gutter/2 0px;
+    img {
+        vertical-align:middle;
+    }
+}
+#checkout .price_summary {
+    display:block;
+    line-height: em(25px);
+    text-align:right;
+    strong {
+        font-size: em(14px);
+    }
+    span {
+        float:left;
+        font-size: em(14px);
+        color: lighten($colorTextBody, 20%);
+    }
+}
+#checkout .price_summary.price_grandtotal {
+    font-size: em(18px);
+}
+#checkout fieldset {
+    margin-bottom: $gutter;
+}
+#pay-btn {
+    font-size: em(22px);
+    color: #fff;
+	background-color: $successGreen;
+	border-color: darken($successGreen, 10%);
+}
+
+/*==============================================================
+    #Modal
+================================================================*/
+@include at-query ($max, $small) {
+	body.modal--visible {
+		overflow: hidden;
+	}
+}
+
+.modal {
+	position: absolute;
+	background-color: #fff;
+	top: 170px;
+	left: -200%;
+	margin-left: -500px; // overridden with JS
+	width: 100%;
+	max-width: 760px;
+	height: auto;
+	z-index: 99999999;
+	visibility: hidden;
+	overflow: auto;
+	-webkit-overflow-scrolling: touch;
+	@include transition('left 0s linear 700ms, box-shadow 600ms cubic-bezier(0.47, 0.5, 0, 0.95) 400ms, margin-top 200ms ease-in-out');
+
+	// Short screens
+	@media only screen and (max-height:645px) {
+		top: 70px;
+	}
+
+	// Medium-down screens
+	@include at-query ($max, $medium) {
+		max-width: 90%;
+	}
+
+	// Small screens
+	.modal--close {
+        position:absolute;
+        cursor:pointer;
+        right:$gutter;
+        top:$gutter;
+        font-size: em(18px);
+    }
+	@include at-query ($max, $small) {
+		position: fixed;
+		top: 0;
+		bottom: 0;
+		margin: 0!important;
+		max-height: none;
+		max-width: none;
+		.modal--close {
+		    display:block;
+		    text-align:right;
+		    position:relative;
+		    right:auto;
+		    left: 0;
+		    top:0;
+		}
+	}
+	.modal--content {
+	    position:relative;
+		padding: $gutter;
+
+		// Medium-down screens
+		@include at-query ($max, $medium) {
+			padding-left: 15px;
+			padding-right: 15px;
+		}
+
+		// Small screens
+		@include at-query ($max, $small) {
+			padding-bottom: 60px;
+			min-height: 100%;
+		}
+	}
+
+	&.is-visible {
+		visibility: visible;
+		left: 50%;
+		@include transition('left 0s linear, box-shadow 600ms cubic-bezier(0.47, 0.5, 0, 0.95) 400ms, margin-top 200ms ease-in-out, opacity 400ms cubic-bezier(0.47, 0.5, 0, 0.95), transform 600ms cubic-bezier(0.47, 0.5, 0, 0.95)');
+
+		// Large screens
+		@include at-query ($min, $large) {
+			box-shadow: 0px 10px 80px rgba(0,0,0,.25);
+		}
+
+		// Small screens
+		@include at-query ($max, $small) {
+			left: 0;
+		}
+	}
+
+	// No transform fallback
+	&.no-transforms {
+		border: 1px solid $colorBorder;
+	}
+
+}
+
+#modal-overlay {
+	position: fixed;
+	width: 100%;
+	height: 100%;
+	visibility: hidden;
+	top: 0;
+	left: 0;
+	z-index: 99999998;
+	opacity: 0;
+	cursor: pointer;
+	@include transition(all 450ms cubic-bezier(0.57,.06,.05,.95));
+	@if (lightness( $colorBody ) > 40) {
+		background-color: #d3d3d3;
+	}
+	@else {
+		background-color: #333333;
+	}
+}
+
+@include at-query ($min, $postSmall) {
+	.modal--visible #modal-overlay {
+		visibility: visible;
+		@include transition(all 650ms cubic-bezier(0.57, 0.06, 0.05, 0.95));
+		@if (lightness( $colorBody ) > 40) {
+			opacity: 0.8;
+		}
+		@else {
+			opacity: 0.95;
+		}
+
+		.lt-ie9 & {
+			-ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=80)";
+		}
+	}
+}
+// Modal content transition
+.modal {
+    display:none;
+	@include transform(scale(0.9)); 
+	opacity: 0;
+}
+
+.modal.is-visible {
+	@include transform(scale(1));
+	opacity: 1;
+}

@@ -1,0 +1,26 @@
+{% if shop.product_reviews_enabled and product-review-badge.reviews_count > 0 %}
+    <span class="product-reviews-badge" style="position:relative;">
+        {% assign review_score_fifties = product-review-badge.reviews_rating | times: 2 | round | divided_by: 2 %}
+        {% for i in (1..5) %}
+            {% if i <= review_score_fifties %}
+                <i class="panda-icon-ui-star color"></i>
+            {% else %}
+                {% assign lastpoint = i | minus:1 %}
+                {% if lastpoint >= review_score_fifties %}
+                    <i class="panda-icon-ui-star-empty color"></i>
+                {% else %}
+                    <i class="panda-icon-ui-star-half color"></i>
+                {% endif %}
+            {% endif %}
+        {% endfor %}
+        {% unless nolink %}
+        <a href="{% if link_to_product %}{{ product-review-badge.url }}{% endif %}#reviews">
+        {% endunless%}
+            {% assign reviews_singular = lang.review_singular | def:'review' %}
+            {% assign reviews_plural = lang.review_plural | def:'reviews' %}
+            <span class="product-review-count">{{ product-review-badge.reviews_count }} {{ product-review-badge.reviews_count | pluralize: reviews_singular, reviews_plural }}</span>
+        {% unless nolink %}
+        </a>
+        {% endunless%}
+    </span>
+{% endif %}

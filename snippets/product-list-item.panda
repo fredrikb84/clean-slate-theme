@@ -1,0 +1,67 @@
+{% comment %}
+
+	This snippet is used to showcase each product during the loop,
+	'for product in collection.products' in collection.panda.
+
+	This example has each product on it's own line for all breakpoints.
+
+{% endcomment %}
+
+{% comment %}
+	Check if the product is on sale and set a variable to be used below.
+{% endcomment %}
+{% assign on_sale = false %}
+{% if product.compare_at_price > product.price %}
+	{% assign on_sale = true %}
+{% endif %}
+
+{% comment %}
+	Check if the product is sold out and set a variable to be used below.
+{% endcomment %}
+{% assign sold_out = true %}
+{% if product.available  %}
+	{% assign sold_out = false %}
+{% endif %}
+
+{% comment %}
+	Set a class for sold-out and on-sale items
+{% endcomment %}
+<div class="grid-item{% if sold_out %} sold-out{% endif %}{% if on_sale %} on-sale{% endif %}">
+
+	<a href="{{ product.url }}" class="product-grid-item">
+		<div class="grid large--display-table">
+			<div class="grid-item large--one-fifth large--display-table-cell medium--one-third text-center">
+				<img src="{{ product.featured_image.src | product_img_url: 'medium' }}" alt="{{ product.featured_image.alt | escape }}" class="product-grid-image">
+			</div>
+			<div class="grid-item large--three-fifths large--display-table-cell medium--two-thirds">
+				<p class="h6">{{ product.title }}</p>
+				{% comment %}
+                    All themes should support Product Reviews
+                {% endcomment %}
+                {% include 'product-review-badge' with product nolink:1 %}
+				<div class="rte">
+				    {% comment %}Product.excerpt is not available yet, but is very likely it will come soon!{% endcomment %}
+					{% if product.excerpt.size > 0 %}
+						{{ product.excerpt }}
+					{% else %}
+						<p>{{ product.content | strip_html | truncatewords: 300 }}</p>
+					{% endif %}
+				</div>
+			</div>
+			<div class="grid-item large--one-fifth large--display-table-cell medium--two-thirds">
+				{% comment %}
+					You can show a leading 'from' or 'up to' by checking 'product.price_varies'
+					if your variants have different prices.
+				{% endcomment %}
+				{% if product.price_varies %}{{ lang.from | def:'From' }}{% endif %}
+        		{{ product.price | money }}
+        		{% if sold_out %}
+        			<br><strong>{{ lang.sold_out | def:'Sold out'}}</strong>
+        		{% endif %}
+        		{% if on_sale %}
+        			<del>{{ product.compare_at_price | money }}</del>
+        		{% endif %}
+			</div>
+		</div>
+	</a>
+</div>

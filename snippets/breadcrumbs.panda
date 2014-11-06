@@ -1,0 +1,70 @@
+{% unless template == 'index' or template == 'cart' %}
+    <nav class="breadcrumb" role="navigation" aria-label="breadcrumbs">
+        <a href="/">{{ lang.home | def:'Home'}}</a>
+        {% if template contains 'product' %}
+            {% if collection %}
+                <span aria-hidden="true">&rsaquo;</span>
+                {{ collection.title | link_to: collection.url }}
+            {% endif %}
+            <span aria-hidden="true">&rsaquo;</span>
+            <span>{{ product.title }}</span>
+        {% elseif template contains 'collection' and template != 'list-collections' %}
+            <span aria-hidden="true">&rsaquo;</span>
+            {% unless current_tags or current_vendor or current_type %}
+                <span>{{ collection.title }}</span>
+            {% else %}
+                {{ collection.title | link_to: collection.url }}
+            {% endunless %}
+            {% if current_type %}
+                <span aria-hidden="true">&rsaquo;</span>
+                {% if current_vendor or current_tags %}
+                    <a href="{{ current_type | url_for_type:true }}">{{ current_type }}</a>
+                {% else %}
+                    <span>{{ current_type }}</span>
+                {% endif %}
+            {% endif %}
+            {% if current_vendor %}
+                <span aria-hidden="true">&rsaquo;</span>
+                {% if current_tags %}
+                    <a href="{{ current_type | url_to_remove_tags }}">{{ current_vendor }}</a>
+                {% else %}
+                    <span>{{ current_vendor }}</span>
+                {% endif %}
+            {% endif %}
+            {% if current_tags %}
+                <span aria-hidden="true">&rsaquo;</span>
+                <span>{{ current_tags | join: " + " }}</span>
+            {% endif %}
+        {% elseif template == 'blog' %}
+            <span aria-hidden="true">&rsaquo;</span>
+            {% if current_tags %}
+                {{ blog.title | link_to: blog.url }}
+                <span aria-hidden="true">&rsaquo;</span>
+                <span>{{ current_tags | join: " + " }}</span>
+            {% else %}
+                <span>{{ blog.title }}</span>
+            {% endif %}
+        {% elseif template == 'article' %}
+            <span aria-hidden="true">&rsaquo;</span>
+            {{ blog.title | link_to: blog.url }}
+            <span aria-hidden="true">&rsaquo;</span>
+            <span>{{ article.title }}</span>
+        {% elseif template contains 'page' %}
+            <span aria-hidden="true">&rsaquo;</span>
+            <span>{{ page.title }}</span>
+        {% elseif template contains 'customers' %}
+            <span aria-hidden="true">&rsaquo;</span>
+            {% if template contains 'account' %}
+                <span>{{ lang.my_account | def:'My Account' }}</span>
+            {% else %}
+                {% assign account_url = '/' | append: shop.handles.account  %}
+                {{ lang.my_account | def:'My Account' | link_to: account_url }}
+                <span aria-hidden="true">&rsaquo;</span>
+                <span>{{ meta_title }}</span>
+            {% endif %}
+        {% else %}
+            <span aria-hidden="true">&rsaquo;</span>
+            <span>{{ meta_title }}</span>
+        {% endif %}
+    </nav>
+{% endunless %}

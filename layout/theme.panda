@@ -1,0 +1,212 @@
+<!doctype html>
+<!--[if lt IE 7]><html class="no-js lt-ie9 lt-ie8 lt-ie7" lang="en"> <![endif]-->
+<!--[if IE 7]><html class="no-js lt-ie9 lt-ie8" lang="en"> <![endif]-->
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en"> <![endif]-->
+<!--[if IE 9 ]><html class="ie9 no-js"> <![endif]-->
+<!--[if (gt IE 9)|!(IE)]><!--> <html class="no-js"> <!--<![endif]-->
+    <head>
+        <meta charset="utf-8" />
+        <!--[if IE]><meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1' /><![endif]-->
+        <title>
+        	{{ meta_title }}{% if current_tags %} &ndash; {{ lang.tagged | def:'tagged' }} &quot;{{ current_tags | join: ', ' }}&quot;{% endif %}{% if current_page > 1 %} &ndash; {{ lang.page | def:'Page' }} {{ current_page }}{% endif %}{% unless meta_title contains shop.name %} &ndash; {{ shop.name }}{% endunless %}
+        </title>
+        {% if meta_description %}
+        <meta name="description" content="{{ meta_description | escape }}" />
+        {% endif %}
+        {% if meta_keywords %}
+        <meta name="keywords" content="{{ meta_keywords | escape }}" />
+        {% endif %}
+        <link rel="canonical" href="{{ canonical_url }}" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        {% include 'open-graph-tags' %}
+        {% include 'twitter-card' %}
+        {% if settings.favicon_enable %}
+        <link rel="shortcut icon" href="{{ 'favicon.png' | asset_url }}" type="image/png" />
+        {% endif %}
+        {{ 'shop.scss' | asset_url | stylesheet_tag }}
+        {% include 'oldIE' %}
+        {% comment %}
+            (Part 1) Javascript snippet to prevent jQuery from blocking initial rendering, and also leave jQuery's $(document).ready() intact
+            This is also great for Google Pagespeed.
+            
+            !!ONLY PLACE ASYNCHRONOUS OR INLINE JAVASCRIPT IN HEADER!!
+        {% endcomment %}
+        <script>(function(w,d,u){w.readyQ=[];w.bindReadyQ=[];function p(x,y){if(x=="ready"){w.bindReadyQ.push(y);}else{w.readyQ.push(x);}};var a={ready:p,bind:p};w.$=w.jQuery=function(f){if(f===d||f===u){return a}else{p(f)}}})(window,document)</script>
+        {{ content_for_header }}
+        <script type="text/javascript">
+            $(function() {
+                $('html').removeClass('no-js').addClass('js');
+            });
+        </script>
+    </head>
+    <body id="{{ meta_title | handle }}" class="{% if customer %}customer-logged-in {% endif %}template-{{ template | replace: '.', ' ' | split: ' ' | first | handle }}" >
+        <header class="site-header" role="banner">
+            <div class="wrapper">
+                <div class="grid--full">
+                	<div class="grid-item large--one-half">
+                		{% comment %}
+                			Use the uploaded logo from theme settings if enabled.
+                			Site name gets precedence with H1 tag on homepage, div on other pages.
+                		{% endcomment %}
+                		{% if template == 'index' %}
+                			<h1 class="header-logo large--left" itemscope itemtype="http://schema.org/Organization">
+                		{% else %}
+                			<div class="h1 header-logo large--left" itemscope itemtype="http://schema.org/Organization">
+                		{% endif %}
+                			{% if settings.logo_use_image %}
+                				<a href="/" itemprop="url">
+                					<img src="{{ 'logo.png' | asset_url }}" alt="{{ shop.name }}" itemprop="logo">
+                				</a>
+                			{% else %}
+                				<a href="/" itemprop="url">{{ shop.name }}</a>
+                			{% endif %}
+                		{% if template == 'index' %}
+                			</h1>
+                		{% else %}
+                			</div>
+                		{% endif %}
+                	</div>
+                	<div class="grid-item large--one-half text-center large--text-right">
+                		{% comment %}
+                			You cart/checkout link should at least show the number of items in it.
+                			Below shows the item count followed by item(s) and the total cart price.
+                		{% endcomment %}
+                		<a href="/{{ shop.handles.cart }}" id="cartToggle">
+                		    {% assign item_singular = lang.item_singular | def:'Item' %} 
+                            {% assign item_plural = lang.item_plural | def:'Items' %}
+                			<i class="panda-icon-ui-cart"></i> (<span id="cartCount">{{ cart.line_items_quantity }}</span> {{ cart.line_items_quantity | pluralize: item_singular, item_plural }} <span id="cartCost">{{ cart.total_price | money }}</span>)
+                		</a>
+                
+                		{% comment %}
+                			If customer accounts are enabled, provide login and create account links
+                		{% endcomment %}
+                		{% if shop.customer_accounts_enabled %}
+                		<p class="site-header--text-links">
+                			{% if customer %}
+                				{{ lang.logged_in_as | def:'Logged in as' }} <a href="/{{ shop.handles.account }}">{{ customer.first_name }}</a> &middot; {{ lang.log_out | def:'Log out' | customer_logout_link }}
+                			{% else %}
+                				{{ lang.log_in | def:'Log in' | customer_login_link }}
+                				{% if shop.customer_accounts_optional %}
+                				{{ lang.or | def:'or' }} {{ lang.create_an_account | def:'Create an account' | customer_register_link }}
+                				{% endif %}
+                			{% endif %}
+                		</p>
+                		{% endif %}
+                	</div>
+                </div>
+            </div>
+        </header>
+        <nav class="nav-bar" role="navigation">
+            <div class="wrapper">
+                <div class="grid">
+                    <div class="grid-item large--two-thirds">
+                        {% include 'site-nav' %}
+                    </div>
+                    <div class="grid-item large--one-third">
+                        <div class="nav-search">
+                            {% include 'search-bar' %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </nav>
+        
+        <main class="wrapper main-content" role="main">
+            {% comment %}}
+                We have a template file to render.
+                That's what content_for_layout is for.
+            {% endcomment %}
+            {{ content_for_layout }}
+        </main>
+
+            
+        <footer class="site-footer small--text-center" role="contentinfo">
+
+        	<div class="wrapper">
+        
+        		<div class="grid">
+        
+        			{% if settings.footer_quicklinks_enable %}
+        				<div class="grid-item medium--one-half large--three-twelfths">
+        					<h3>{{ linklists[settings.footer_quicklinks_linklist].title }}</h3>
+        					<ul>
+        						{% for link in linklists[settings.footer_quicklinks_linklist].links %}
+        							<li><a href="{{ link.url }}">{{ link.title }}</a></li>
+        						{% endfor %}
+        					</ul>
+        				</div>
+        			{% endif %}
+        
+        			{% if settings.footer_social_enable %}
+        			<div class="grid-item medium--one-half large--five-twelfths">
+        				<h3>{{ lang.social_media_title | def:'Get Connected' }}</h3>
+        					{% comment %}
+        						Loop through the social network links
+        					{% endcomment %}
+        					{% include 'social-links' %}
+        			</div>
+        			{% endif %}
+        
+        			{% if settings.footer_newsletter_enable %}
+        			<div class="grid-item large--one-third">
+        				<h3>{{ lang.newsletter | def:'Newsletter' }}</h3>
+        				{% form 'create_customer' id:'newsletter-signup' %}
+        				    {% if form.posted_successfully or form.errors %}
+                                <script type="text/javascript">window.location.hash = '#newsletter-signup';</script>
+                            {% endif %}
+                            {% include 'form-errors-custom' %}
+                            {% if form.posted_successfully %}
+                            <p class="note form-success">
+                                {{ lang.thanks_for_subscribing | def: 'Thank you for subscribing to our newsletter!' }}
+                            </p>
+                            {% else %}
+                                <input type="hidden" name="customer[accepts_marketing]" value="1" />
+                                <input type="hidden" name="customer[tags]" value="prospect,newsletter" />
+                                <label class="hidden-label">{{ lang.fill_in_your_email | def:'Fill in your e-mail' }}</label>
+                                <div class="input-group">
+                                    <input type="email" value="{% if customer %}{{ customer.email }}{% endif %}" placeholder="{{ lang.fill_in_your_email | def:'yourname@domain.com' | escape }}" name="customer[email]" class="input-group-field{% if form.errors contains 'email' %} error{% endif %}" autocorrect="off" autocapitalize="off">
+                                    <span class="input-group-btn">
+                                        <input type="submit" class="btn" value="{{ lang.subscribe | def:'Subscribe' | escape }}" name="subscribe">
+                                    </span>
+                                </div>
+                            {% endif %}
+                        {% endform %}
+        			</div>
+        			{% endif %}
+        		</div>
+        
+        		
+        
+                {% if shop.enabled_payment_icons.size > 0 %}
+                    <div class="text-center payment-icons">
+                    {% for payment in shop.enabled_payment_icons %}
+                        <i class="panda-icon-payment-{{ payment }}"></i>
+                    {% endfor %}
+                    </div>
+                    <hr>
+                {% endif %}
+                    
+        		<p class="text-center">
+        			Copyright &copy; {{ now | date:'Y' }} {{ shop.name }}<br>
+        			<small>{{ powered_by_link }}</small>
+        		</p>
+        
+        	</div>
+        
+        </footer>
+        {% comment %}
+            (Part 2) Loading jQuery after content has been rendered
+        {% endcomment %}
+        {{ '//ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js' | script_tag }}
+        {{ 'shop.js' | asset_url | script_tag }}
+        {% if template contains 'product' %}
+        {% comment %}JavaScript with helper classes used for variant options and product reviews{% endcomment %}
+        <script src="/static/global/product_helper.js"></script>
+        {% endif %}
+        {% if template contains 'addresses' %}
+        {% comment %}JavaScript with helper classes used for address forms{% endcomment %}
+        <script src="/static/global/account_helper.js"></script>
+        {% endif %}
+        <script>(function($,d){$.each(readyQ,function(i,f){$(f)});$.each(bindReadyQ,function(i,f){$(d).bind("ready",f)})})(jQuery,document)</script>
+    </body>
+</html>

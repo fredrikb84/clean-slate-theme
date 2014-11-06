@@ -1,0 +1,16 @@
+{% comment %}
+This snippet is used to showcase each collection during the loop,
+'for product in collection.products' in list-collections.panda.
+{% endcomment %}
+<div class="section-header">
+    <p class="h1 section-header--left">{{ collection.title }}</p>
+    <div class="section-header--right">
+        <a href="{{ collection.url }}">{{ lang.browse | def: 'Browse'}} {{ collection.title }} &rsaquo;</a>
+    </div>
+</div>
+<div class="grid">
+{% for product in collection.products limit:5 %}
+    {% assign grid_item_width = 'large--one-fifth medium--one-half' %}
+    {% include 'product-grid-item' %}
+{% endfor %}
+</div>

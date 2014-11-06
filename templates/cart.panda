@@ -1,0 +1,158 @@
+{% assign shopping_cart_title = lang.shopping_cart | def:'Shopping Cart' %}
+{% title shopping_cart_title %}
+{% if cart.line_items_count > 0 %}
+	{% form 'cart' %}
+
+		<h1>{{ shopping_cart_title }}</h1>
+
+		{% comment %}
+			Loop through products in the cart
+		{% endcomment %}
+		{% for item in cart.line_items %}
+		<div class="cart-row" data-id="{{ item.id }}">
+			<div class="grid">
+
+				{% comment %}
+					Let's use a sub grids to keep our product image and title together,
+					and our quantity, price and remove buttons together
+				{% endcomment %}
+
+				<div class="grid-item large--one-half">
+					<div class="grid">
+
+						<div class="grid-item one-third">
+							<a href="{{ item.url }}?variant={{ item.variant_id }}">
+								<img src="{{ item.featured_image | product_img_url: 'medium' }}"  alt="{{ item.title | escape }}">
+							</a>
+						</div>
+
+						{% comment %}
+							If you want the product title and any variants in one line, use {{ item.title }}.
+							Below they've been separated for styling purposes.
+						{% endcomment %}
+						<div class="grid-item two-thirds">
+							<span class="h4">
+								<a href="{{ item.url }}?variant={{ item.variant_id }}">
+									{{ item.product.title }}
+								</a>
+								{% if item.product.variants.size > 1 %}
+									<br>
+									<small>{{ item.variant.title }}</small>
+								{% endif %}
+							</span>
+							
+							{% if item.properties.size > 0 %}
+							<p>
+								{% for p in item.properties %}
+									{% unless p == blank %}
+										{{ forloop.handle }}:
+
+										{% comment %}
+											Check if there was an uploaded file associated
+										{% endcomment %}
+										{% if p contains '/static/' %}
+											<a href="{{ p }}">{{ p | split: '/' | last }}</a>
+										{% else %}
+											{{ p }}
+										{% endif %}
+
+										<br>
+									{% endunless %}
+								{% endfor %}
+							</p>
+							{% endif %}
+						</div>
+
+					</div>
+				</div>
+
+				<div class="grid-item large--one-half">
+					<div class="grid">
+
+						<div class="grid-item one-third medium-down--one-third text-right">
+							{% comment %}
+								Added data-id for the ajax cart implementation only.
+							{% endcomment %}
+							<input type="text" class="quantity-selector" name="updates[]" id="updates_{{ item.id }}" value="{{ item.quantity }}" min="0" data-id="{{ item.id }}">
+						</div>
+
+						<div class="grid-item one-third medium-down--one-third medium-down--text-left text-right">
+							<span class="h4">{{ item.price | money }}</span>
+						</div>
+
+						<div class="grid-item one-third medium-down--one-third text-right">
+							{% comment %}
+								To remove an item from the cart, reload the page with the following parameters.
+								Added data-id for the ajax cart implementation only.
+							{% endcomment %}
+							<a href="/{{ shop.handles.cart }}/change?line={{ forloop.index }}&amp;quantity=0" data-id="{{ item.id }}">{{ lang.remove | def:'Remove' }}</a>
+						</div>
+
+					</div>
+				</div>
+
+			</div>
+		</div>
+
+		{% endfor %}
+
+		<div class="cart-row">
+			<div class="grid">
+
+				{% comment %}
+					Optional, add a textarea for special notes
+						- Your theme settings can turn this on or off. Default is on.
+						- Make sure you have name="note" for the message to be submitted properly
+				{% endcomment %}
+				{% if settings.cart_notes_enable %}
+					<div class="grid-item large--one-half">
+						<label for="cart-note">{{ lang.special_instructions | def:'Special instructions for seller' }}</label>
+						<textarea name="note" class="input-full" id="cart-note">{{ cart.note }}</textarea>
+					</div>
+				{% endif %}
+
+				{% comment %}
+					If notes are used, adjust the column width
+				{% endcomment %}
+				<div class="grid-item text-right {% if settings.cart_notes_enable %}large--one-half{% endif %}">
+
+					<div class="cart-subtotal">
+						{{ lang.subtotal | def:'Subtotal' }}
+						<span class="h1 cart-subtotal--price">{{ cart.total_price | money }}</span>
+					</div>
+
+					{% comment %}
+						name="update" is required for the update button to work
+					{% endcomment %}
+					<input type="submit" name="update" class="btn-secondary update-cart" value="{{ lang.update_cart | def:'Update Cart' | escape }}">
+
+					{% comment %}
+						name="checkout" is required for the submit button to work
+					{% endcomment %}
+					<input type="submit" name="checkout" class="btn" value="{{ lang.check_out | def:'Check out' | escape }}">
+
+					{% comment %}
+						Used by Paypal Express and others
+					{% endcomment %}
+					{% if additional_checkout_buttons %}
+						<p>{{ content_for_additional_checkout_buttons }}</p>
+					{% endif %}
+
+				</div>
+
+			</div>
+		</div>
+
+	{% endform %}
+
+{% else %}
+
+	{% comment %}
+		It's likely people won't have items in the cart sometimes.
+		Do something fun here, it's a great chance to show your company's human side.
+	{% endcomment %}
+
+	<h2>{{ lang.it_appears_that_your_cart_is_empty | def: 'It appears that your cart is currently empty.'}}</h2>
+	<p><a href="/{{ shop.handles.collection }}">{{ lang.click_here_to_view_our_collections | def: 'Click here to view our collections'}}</a>.</p>
+
+{% endif %}

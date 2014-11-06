@@ -1,0 +1,101 @@
+{% title lang.your_order_was_placed_successfully %}
+<h1>{{ lang.thank_you | def:'Thank you!' }}</h1>
+<div class="grid" id="checkout-grid">
+    <div class="grid-item large--one-third" id="checkout">
+        <fieldset class="sticky">
+        <h3>{{ lang.youve_just_purchased_this | def:"You've just purchased this" }}</h3>
+        {% for item in order.line_items %}
+        <div class="grid">
+            <div class="grid-item one-third">
+                <img class="images" src="{{ item.featured_image.src | product_img_url: 'small' }}" alt="{{ item.featured_image.alt | escape }}" />
+            </div>
+            <div class="grid-item two-thirds">
+                {% if item.title != item.product_title %}
+                    {{ item.product_title }}
+                {% else %}
+                    {{ item.title }}
+                {% endif %}
+                
+                {% if item.title != item.product_title %}
+					<br>
+					<small>{{ item.variant_title }}</small>
+				{% endif %}
+				<p>
+                    {{ item.quantity }} x {{ item.price | money }}
+                </p>
+            </div>
+        </div>
+        <hr class="hr--small"/>
+        {% endfor %}
+        <div class="price_summary price_subtotal">
+            <span>{{ lang.subtotal | def:'Subtotal' }}</span> <strong>{{ order.subtotal_price | money }}</strong>
+        </div>
+        {% if order.requires_shipping %}
+        	<div class="price_summary price_shipping">
+                <span>{{ lang.shipping_cost | def:'Shipping' }}</span> <strong>{% if order.shipping_price > 0 %}{{ order.shipping_price | money }}{% else %}{{ lang.free | def:'FREE'}}{% endif %}</strong>
+            </div>
+        {% endif %}
+        {% if order.payment_price > 0 %}
+            <div class="price_summary price_payment">
+                <span>{{ lang.payment_fee | def:'Payment Fee' }}</span> <strong>{{ order.payment_price | money }}</strong>
+            </div>
+        {% endif %}
+        {% if order.tax_lines.size > 0 %}
+            <div class="price_summary price_tax_lines">
+                {% for tax_line in order.tax_lines %}
+                <div><span>{{ tax_line.title }} ({{ tax_line.rate_percentage }}%)</span> <strong>{{ tax_line.price | money }}</strong></div>
+                {% endfor %}
+            </div>
+        {% endif %}
+        {{ form.price_tax_lines }}
+        <hr class="hr--small" />
+            <div class="price_summary price_grandtotal">
+                <span>{{ lang.grandtotal | def:'Grand Total' }}</span> <strong>{{ order.total_price | money }}</strong>
+            </div>
+        </fieldset>
+    </div>
+    <div class="grid-item large--two-thirds">
+        <h2>{{ lang.your_order_was_placed_successfully | def:'Your order was placed successfully' }}</h2>
+        
+        <p class=" h5">
+        	{{ lang.your_order_id_is }}: <strong>{{ order.name }}</strong>
+        </p>
+        
+        <p>
+            {{ lang.an_email_receipt_containing_information_about_your_order_is_sent }}<br/>
+            <em>({{ order.email }})</em>
+        </p>
+        {% if shop.customer_accounts_optional %}
+            <hr />
+            {% form 'set_customer_password' %}
+        		{% if form.posted_successfully? %} 
+        			<p class="note form-success">
+        				{{ lang.your_account_has_been_created }}
+        			</p>
+        		{% elseif order.customer.status != 'enabled' %}
+                    <h3>{{ shop.checkout.lang.would_you_like_an_account }}</h3>
+                    <p>
+                        {{ lang.create_your_password_to_activate_your_account_for_x | insert: order.email }}
+                    </p>
+        			{% include 'form-errors-custom' %}
+                    <label for="customer_password">{{ lang.password | def:'Password' }}</label>
+                    <input type="password" value="" name="customer[password]" id="customer_password" {% if form.errors contains "password" %} class="error"{% endif %}>
+                    
+                    <label for="customer_password_confirmation">{{ lang.confirm_password | def:'Password confirmation' }}</label>
+                    <input type="password" value="" name="customer[password_confirmation]" id="customer_password_confirmation" {% if form.errors contains "password_confirmation" %} class="error"{% endif %}>
+      
+        			<input type="submit" value="{{ lang.create_my_account | def:'Create my account' | escape }}" />
+        		{% endif %}
+        	{% endform %}
+        {% endif %}
+        
+        {% if shop.checkout.additional_content != '' %}
+        <div class="rte">
+        	{{ shop.checkout.additional_content }}
+        </div>
+        {% endif %}
+        <p>
+        	{{ lang.thank_you_for_shopping_at }} <a href="{{ shop.url }}">{{ shop.name }}</a>
+        </p>
+    </div>
+</div>

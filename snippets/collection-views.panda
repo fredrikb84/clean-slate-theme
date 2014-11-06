@@ -1,0 +1,50 @@
+{% if collection.products_count > 1 %}
+    <div class="form-horizontal">
+        <select id="sortBy">
+            <option value="manual">{{ lang.featured | def:'Featured' }}</option>
+            <option value="price-asc">{{ lang.price_low_to_high | def:'Price, low to high' }}</option>
+            <option value="price-desc">{{ lang.price_high_to_low | def:'Price, high to low' }}</option>
+            <option value="title-asc">{{ lang.alpha_a_z | def:'Alphabetically, A-Z' }}</option>
+            <option value="title-desc">{{ lang.alpha_z_a | def:'Alphabetically, Z-A' }}</option>
+            {% comment %}
+                2 more available options
+                <option value="published-asc">{{ lang.published_new_to_old | def:'Published, latest to oldest' }}</option>
+                <option value="published-desc">{{ lang.published_old_to_new | def:'Published, oldest to latest' }}</option>
+            {% endcomment %}
+            <option value="created-asc">{{ lang.date_old_to_new | def:'Date, old to new' }}</option>
+            <option value="created-desc">{{ lang.date_new_to_old | def:'Date, new to old' }}</option>
+            <option value="bestseller">{{ lang.best_selling | def:'Best Selling' }}</option>
+            {% if shop.product_reviews_enabled %}
+            <option value="bestrated">{{ lang.best_rated | def:'Best Rated' }}</option>
+            {% endif %}
+        </select>
+    </div>
+    <script>
+        $(function() {
+            $('#sortBy').val('{{ current_sorting }}').on('change', function() {
+                shop.queryParams.sorting = $(this).val();
+                location.search = $.param(shop.queryParams).replace(/\+/g, '%20');
+            });
+        });
+    </script>
+{% endif %}
+{% if collection.products_count > 0 %}
+<div class="collection-view">
+    <a title="{{ lang.grid_view | def:'Grid View' | escape }}" class="change-view{% unless request.view == 'list' %} collection-view--active{% endunless %}" data-view="grid">
+        <i class="panda-icon-ui-view-grid"></i>
+    </a>
+    <a title="{{ lang.list_view | def:'List View' | escape }}" class="change-view{% if request.view == 'list' %} collection-view--active{% endif %}" data-view="list">
+        <i class="panda-icon-ui-view-list"></i>
+    </a>
+</div>
+<script>
+    $(function() {
+        $('.change-view').on('click', function() {
+            if (!$(this).hasClass('collection-view--active')) {
+                shop.queryParams.view = $(this).attr('data-view');
+                location.search = $.param(shop.queryParams).replace(/\+/g, '%20');
+            }
+        });
+    });
+</script>
+{% endif %}

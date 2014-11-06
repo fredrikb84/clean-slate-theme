@@ -1,0 +1,33 @@
+{% comment %}
+    Recent blog posts
+{% endcomment %}
+<h4>{{ lang.recent_articles | def:'Recent Articles' }}</h4>
+    {% assign current_article_id = article.id %}
+    {% for article in blog.all_articles limit:6 %}
+    <p>
+        {% if current_article_id == article.id %}
+            {{ article.title }}
+        {% else %}
+        <a href="{{ article.url }}">{{ article.title }}</a>
+        {% endif %}
+        <br>
+        <time pubdate datetime="{{ article.published_at | date: 'Y-m-d' }}">
+            <em>{{ article.published_at | date: 'Y-m-d' }}</em>
+        </time>
+    </p>
+    {% endfor %}
+{% comment %}
+Blog tags
+{% endcomment %}
+{% if blog.tags.size > 0 %}
+<h4>{{ lang.categories | def:'Categories' }}</h4>
+<ul>
+    {% for tag in blog.tags %}
+        {% if current_tags contains tag %}
+            <li>{{ tag }}</li>
+        {% else %}
+            <li>{{ tag | link_to_tag: tag }}</li>
+        {% endif %}
+    {% endfor %}
+</ul>
+{% endif %}

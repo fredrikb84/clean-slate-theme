@@ -1,0 +1,11 @@
+{% assign collection_list_title = lang.list_collections | def: 'Our Collections' %}
+{% title collection_list_title %}
+{% include 'breadcrumbs' with collection_list_title %} 
+{% comment %}
+    Loop through each collection, except 'frontpage'
+{% endcomment %}
+{% for collection in collections %}
+    {% unless collection.handle == 'frontpage' %}
+        {% include 'collection-list-item' %}
+    {% endunless %}
+{% endfor %}

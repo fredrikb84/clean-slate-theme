@@ -1,0 +1,78 @@
+{% if search.performed %}
+    {% assign search_title = settings.lang_your_search_for | def:'Your search for "%s"' | insert: search.terms %}
+{% else %}
+    {% assign search_title = settings.lang_search_our_store | def:'Search our store' %}
+{% endif %}
+{% title search_title %}
+<div class="grid">
+	<div class="grid-item large--two-thirds push--large--one-sixth">
+
+		{% if search.performed %}
+
+			{% paginate search.results by 10 %}
+
+				{% comment %}
+					We don't have any results to show. Feel free to show off featured products
+					or suggested searches here.
+				{% endcomment %}
+				
+				{% if search.results_count == 0 %}
+
+					<h1 class="h2 text-center">{{ settings.lang_search_for_x_no_results | def: 'Your search for "%s" did not yield any results.' | insert: search.terms }}</h1>
+					{% include 'search-bar' %}
+
+				{% else %}
+
+					<h1 class="h2 text-center">{{ settings.lang_search_for_x_found_following | def: 'Your search for "%s" revealed the following:' | insert: search.terms }}</h1>
+                    {% include 'search-bar' %}
+
+					{% for item in search.results %}
+						<div class="grid">
+
+                        	{% if item.type == 'product' %}
+                        		<div class="grid-item one-third">
+                        			<a href="{{ item.url }}" title="{{ item.title | escape }}">
+                        				{{ item.featured_image.src | img_url: 'medium' | img_tag: item.featured_image.alt }}
+                        			</a>
+                        		</div>
+                        	{% endif %}
+                        
+                        	{% comment %}
+                        		If we don't have a featured_image, add a push-- class to keep the alignment the same
+                        	{% endcomment %}
+                        	<div class="grid-item two-thirds {% unless item.featured_image %}push--one-third{% endunless %}">
+                        		<h3>{{ item.title | link_to: item.url }}</h3>
+                        		<p>{{ item.content | strip_html | truncatewords: 200 }}</p>
+                        	</div>
+                        
+                        </div>
+                        {% unless forloop.last %}    
+                            <hr>
+                        {% endunless %}
+					{% endfor %}
+
+				{% endif %}
+
+				{% if paginate.pages > 1 %}
+				    <hr>
+					<div class="text-center">
+						{% include 'pagination-custom' %}
+					</div>
+				{% endif %}
+
+			{% endpaginate %}
+
+		{% else %}
+
+			{% comment %}
+				If search.performed is false, someone either accessed the page without
+				the q parameter, or it was blank.
+				Be sure to show a search form here, along with anything else you want to showcase.
+			{% endcomment %}
+			<h1 class="h2 text-center">{{ settings.lang_search_our_store | def:'Search our store' }}</h1>
+			{% include 'search-bar' %}
+
+		{% endif %}
+
+	</div>
+</div>

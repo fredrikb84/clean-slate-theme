@@ -1,0 +1,144 @@
+{% assign order_title = lang.order | def:'Order' | append:' ' | append: order.name %}
+{% title order_title %}
+{% include 'breadcrumbs'%}
+<h1>{{ lang.my_account | def:'My Account'}}</h1>
+<hr class="hr--small">
+<div class="grid">
+
+	<div class="grid-item two-thirds medium-down--one-whole">
+		<h4>{{ order_title }}</h4>
+
+		<p>{{ lang.placed_on }} <strong>{{ order.created_at | date: "Y-m-d H:i" }}</strong></p>
+
+		{% if order.cancelled %}
+		<div class="errors">
+			<h5>{{ lang.order_cancelled_on | def:'Order Cancelled on' }} {{ order.cancelled_at | date: "Y-m-d H:i" }}</h5>
+			<p>{{ lang.reason | def:'Reason' }}: {{ order.cancel_reason }}</p>
+		</div>
+		{% endif %}
+
+		<table class="full">
+			<thead>
+				<tr>
+					<th>{{ lang.product | def: 'Product' }}</th>
+					<th>{{ lang.price | def:'Price' }}</th>
+					<th class="text-center">{{ lang.quantity | def:'Quantity' }}</th>
+					<th class="text-right">{{ lang.grandtotal | def:'Grand Total' }}</th>
+				</tr>
+			</thead>
+			<tbody>
+				{% for line_item in order.line_items %}
+				<tr id="{{ line_item.id }}">
+					<td>
+						{{ line_item.title }}
+					</td>
+					<td>{{ line_item.price | money }}</td>
+					<td class="text-center">{{ line_item.quantity }}</td>
+					<td class="text-right">{{ line_item.line_price | money }}</td>
+				</tr>
+				{% endfor %}
+			</tbody>
+			<tfoot>
+				<tr>
+					<td colspan="3">{{ lang.subtotal | def:'Subtotal' }}:</td>
+					<td class="text-right">{{ order.subtotal_price | money }}</td>
+				</tr>
+
+				{% for discount in order.discounts %}
+					<tr class="order_summary discount">
+						<td colspan="3">{{ discount.title }}:</td>
+						<td class="text-right">{{ discount.savings | money }}</td>
+					</tr>
+				{% endfor %}
+
+				{% for shipping_method in order.shipping_methods %}
+				<tr>
+					<td colspan="3">{{ lang.shipping | def:'Shipping' }} ({{ shipping_method.title }}):</td>
+					<td class="text-right">{% if shipping_method.price > 0 %}{{ shipping_method.price | money }}{% else %}{{ lang.free | def:'FREE' }}{% endif %}</td>
+				</tr>
+				{% endfor %}
+
+				{% for tax_line in order.tax_lines %}
+					<tr>
+						<td colspan="3">{{ tax_line.title }} ({{ tax_line.rate | times: 100 }}%):</td>
+						<td class="text-right">{{ tax_line.price | money }}</td>
+					</tr>
+				{% endfor %}
+
+				<tr>
+					<td colspan="3"><strong>{{ lang.grandtotal | def:'Grand Total' }}:</strong></td>
+					<td class="text-right"><strong>{{ order.total_price | money }} {{ order.currency }}</strong></td>
+				</tr>
+			</tfoot>
+		</table>
+
+	</div>
+
+	<div class="grid-item one-third medium-down--one-whole">
+
+		<h4>{{ lang.billing_address | def:'Billing Address' }}</h4>
+
+		<p><strong>{{ lang.payment_status | def:'Payment Status'}}:</strong>
+		    {% case order.financial_status %}
+                {% when 'authorized' %}
+                    {{ lang.authorized | def:'Authorized' }}
+                {% when 'pending' %}
+                    {{ lang.pending | def:'Pending' }}
+                {% when 'partially_paid' %}
+                    {{ lang.partially_paid | def:'Partially Paid' }}
+                {% when 'paid' %}
+                    {{ lang.paid | def:'Paid' }}
+                {% when 'voided' %}
+                    {{ lang.voided | def:'Voided' }}
+                {% when 'refunded' %}
+                    {{ lang.refunded | def:'Refunded' }}
+                {% when 'partially_refunded' %}
+                    {{ lang.partially_refunded | def:'Partially Refunded' }}
+            {% endcase %}
+		</p>
+
+		<h5>{{ order.billing_address.name }}</h5>
+		<p>
+			{% if order.billing_address.company != '' %}
+				{{ order.billing_address.company }}<br>
+			{% endif %}
+			{{ order.billing_address.street }}<br>
+			{{ order.billing_address.city }}<br>
+			{% if order.billing_address.province != '' %}
+				{{ order.billing_address.province }}<br>
+			{% endif %}
+			{{ order.billing_address.zip | upcase }}<br>
+			{{ order.billing_address.country }}<br>
+			{{ order.billing_address.phone }}
+		</p>
+
+		<h4>{{ lang.shipping_address | def:'Shipping Address' }}</h4>
+
+		<p><strong>{{ lang.fulfillment_status | def:'Fulfillment Status'}}:</strong>
+            {% case order.fulfillment_status %}
+                {% when 'fulfilled' %}
+                    {{ lang.fulfilled | def:'Fulfilled' }}
+                {% when 'partial' %}
+                    {{ lang.partially_fulfilled | def:'Partially Fulfilled' }}
+                {% else %}
+                    {{ lang.unfulfilled | def:'Unfulfilled' }}
+            {% endcase %}
+        </p>
+		<h5>{{ order.shipping_address.name }}</h5>
+		<p>
+			{% if order.shipping_address.company != '' %}
+				{{ order.shipping_address.company }}<br>
+			{% endif %}
+			{{ order.shipping_address.street }}<br>
+			{{ order.shipping_address.city }}<br>
+			{% if order.shipping_address.province != '' %}
+				{{ order.shipping_address.province }}<br>
+			{% endif %}
+			{{ order.shipping_address.zip | upcase }}<br>
+			{{ order.shipping_address.country }}<br>
+			{{ order.shipping_address.phone }}
+		</p>
+
+	</div>
+
+</div>

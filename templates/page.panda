@@ -1,0 +1,11 @@
+<div class="grid">
+    <div class="grid-item large--two-thirds push--large--one-sixth">
+        <h1>{{ page.h1_title }}</h1>
+        {% comment %}
+        Regular page content goes here.
+        {% endcomment %}
+        <div class="rte">
+            {{ page.content }}
+        </div>
+    </div>
+</div>

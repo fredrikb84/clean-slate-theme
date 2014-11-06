@@ -1,0 +1,19 @@
+{% comment %}
+    Set the default collection_item_width if no variable is set
+{% endcomment %}
+{% unless collection_item_width %}
+    {% assign collection_item_width = 'medium--one-half large--one-third' %}
+{% endunless %}
+<div class="grid-item {{collection_item_width}} text-center">
+    <a href="{{ collection.url }}" class="collection-grid-image">
+        {{ collection.image.src | collection_img_url: 'large' | img_tag: collection.title }}
+    </a>
+    <a href="{{ collection.url }}">
+        {{ collection.title }}
+    </a>
+    <p>
+        {% assign item_singular = lang.item_singular | def:'Item' %} 
+        {% assign item_plural = lang.item_plural | def:'Items' %}
+        ({{ collection.all_products_count }} {{ collection.all_products_count | pluralize: item_singular, item_plural }})
+    </p>
+</div>

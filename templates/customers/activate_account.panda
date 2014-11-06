@@ -1,0 +1,31 @@
+{% assign activate_account_title = lang.activate_account | def:'Active Account' %}
+{% title activate_account_title %}
+<div class="grid">
+  <div class="grid-item large--one-third push--large--one-third">
+
+    <h1>{{ activate_account_title }}</h1>
+    {% form 'activate_customer_password' %}
+    <p>{{ lang.create_your_password_to_activate_your_account_for_x | def: 'Create your password to activate your account for %s.' | insert: form.email }}</p>
+
+    {% comment %}
+      This form must use 'activate_customer_password'
+    {% endcomment %}
+
+      {% include 'form-errors-custom' %}
+
+      <label for="customer_password">{{ lang.password | def:'Password' }}</label>
+      <input type="password" value="" name="customer[password]" id="customer_password" {% if form.errors contains "password" %} class="error"{% endif %}>
+
+      <label for="customer_password_confirmation">{{ lang.confirm_password | def:'Password confirmation' }}</label>
+      <input type="password" value="" name="customer[password_confirmation]" id="customer_password_confirmation" {% if form.errors contains "password_confirmation" %} class="error"{% endif %}>
+
+      <div class="text-center">
+        <p>
+          <input type="submit" class="btn" value="{{ lang.activate_account | def:'Active Account' }}">
+        </p>
+        {{ lang.or | def:'or' }} <input type="submit" class="text-link" name="decline" id="customer_decline" value="{{ lang.decline_invitation | def: 'Decline Invitation' }}">
+      </div>
+    {% endform %}
+
+  </div>
+</div>

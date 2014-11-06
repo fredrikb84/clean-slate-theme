@@ -1,0 +1,13 @@
+<div class="comment">
+    <div class="rte">
+        {{ comment.content }}
+    </div>
+    <em>
+        <strong>({{ comment.author }})</strong>
+        <strong>
+            <time datetime="{{ comment.created_at | date: 'Y-m-d' }}">
+                {{ comment.created_at | date: 'Y-m-d' }}
+            </time>
+        </strong>
+    </em>
+</div>

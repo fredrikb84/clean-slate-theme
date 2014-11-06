@@ -1,0 +1,36 @@
+{
+"current": "Default",
+"presets": {
+"Default": {
+"cart_notes_enable": true,
+"color_body_bg": "#fff",
+"color_body_text": "#333333",
+"color_borders": "#e5e5e5",
+"color_footer_bg": "#f2f2f2",
+"color_footer_social_link": "#bbbbbb",
+"color_footer_text": "#636363",
+"color_primary": "#747474",
+"color_secondary": "#464646",
+"favicon_enable": false,
+"footer_newsletter_enable": true,
+"footer_quicklinks_enable": true,
+"footer_quicklinks_linklist": "footer",
+"footer_social_enable": true,
+"logo_use_image": false,
+"share_facebook":true,
+"share_twitter":true,
+"share_pinterest":true,
+"share_google":true,
+"share_fancy":true,
+"social_sharing_count":true,
+"homepage_page":"welcome",
+"homepage_blog":"news",
+"homepage_collection":"frontpage",
+"facebook_url":"https://www.facebook.com/pandacommerce",
+"twitter_url":"https://twitter.com/pandacommerce",
+"googleplus_url":"https://plus.google.com/108905056425068111475",
+"base_font_size":"14px",
+"base_font_family":"Helvetica, Arial, sans-serif"
+}
+}
+}

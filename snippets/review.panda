@@ -1,0 +1,37 @@
+{% assign review_rating_percentage = review.rating | minus: 1 | divided_by: 4 | times: 10 %}
+{% assign review_score_fifties = review.rating | times: 2 | round | divided_by: 2 %}
+<div itemprop="reviews" class="review" itemscope itemtype="http://schema.org/Review">
+    <div class="review-header">
+        <span class="h4" itemprop="name">{{ review.title }}</span>
+        {% for i in (1..5) %}
+            {% if i <= review_score_fifties %}
+                <i class="panda-icon-ui-star color"></i>
+            {% else %}
+                {% assign lastpoint = i | minus:1 %}
+                {% if lastpoint >= review_score_fifties %}
+                    <i class="panda-icon-ui-star-empty color"></i>
+                {% else %}
+                    <i class="panda-icon-ui-star-half color"></i>
+                {% endif %}
+            {% endif %}
+        {% endfor %}
+    </div>
+    <meta content="{{ review.author }}" itemprop="author">
+    <meta content="{{ review.created_at | date: 'Y-m-d' }}" itemprop="dateCreated">
+    <div class="rte" itemprop="description">
+        {{ review.body }}
+    </div>
+    <em>
+        <strong>({{ review.author }})</strong>
+        <strong>
+            <time datetime="{{ review.created_at | date: 'Y-m-d' }}">
+                {{ review.created_at | date: 'Y-m-d' }}
+            </time>
+        </strong>
+    </em>
+    <div itemtype="http://schema.org/Rating" itemscope="" itemprop="reviewRating">
+        <meta content="1" itemprop="worstRating" />
+        <meta content="5" itemprop="bestRating" />
+        <meta content="{{ review.rating }}" itemprop="ratingValue" />
+    </div>
+</div>

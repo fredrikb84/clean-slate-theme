@@ -1,0 +1,198 @@
+{% comment %}
+    We're going to reference the number of comments below, so let's hold it in a variable.
+{% endcomment %}
+{% assign number_of_comments = article.comments_count %}
+{% comment %}
+    If a comment was just submitted and it has no blank fields, we have an extra comment to count.
+{% endcomment %}
+{% if comment and comment.status != 'published' %}
+    {% assign number_of_comments = article.comments_count | plus: 1 %}
+{% endif %}
+{% include 'breadcrumbs' %}
+
+<div class="grid">
+
+	<article class="grid-item large--three-quarters" itemscope itemtype="http://schema.org/Article">
+
+		<header class="section-header">
+			<div class="section-header--left">
+				<h1>{{ article.h1_title }}</h1>
+				<p>
+					<strong>({{ article.author }})</strong>
+					<strong><time pubdate datetime="{{ article.published_at | date: 'Y-m-d' }}">
+						{{ article.published_at | date: 'Y-m-d' }}
+					</time></strong>
+				</p>
+			</div>
+		</header>
+
+		<div class="rte" itemprop="articleBody">
+			{{ article.content }}
+		</div>
+
+		{% comment %}
+			Show off meta information like comments and tags.
+		{% endcomment %}
+		<ul>
+
+			{% if blog.comments_enabled %}
+			<li>
+				<a href="#comments">
+					{% assign comment_singular = lang.comment_singular | def:'Comment' %}
+				    {% assign comment_plural = lang.comment_plural | def:'Comments' %} 
+					{{ article.comments_count }} {{ article.comments_count | pluralize: comment_singular,comment_plural }}
+				</a>
+			</li>
+			{% endif %}
+
+			{% if article.tags.size > 0 %}
+                <li>
+                    <span>{{ lang.tagged | def:'Tagged' }}:</span>
+                    {% for tag in article.tags %}
+                        <a href="{{ tag | url_to_tag }}">{{ tag }}</a>{% unless forloop.last %}, {% endunless %}
+                    {% endfor %}
+                </li>
+            {% endif %}
+
+		</ul>
+
+		{% comment %}
+			Create links to the next and previous articles, if available.
+		{% endcomment %}
+
+		{% if blog.next_article or blog.previous_article %}
+		<hr>
+		{% comment %}
+			If you only have elements floated in a container, you can use the
+			.clearfix class to force the parent to maintain its structure.
+		{% endcomment %}
+		<p class="clearfix">
+			{% if blog.previous_article %}
+				<span class="left">
+				    <a href="{{ blog.previous_article_url }}">&larr; {{ lang.older_post | def:'Older Post'}}</a>
+				</span>
+			{% endif %}
+			{% if blog.next_article %}
+				<span class="right">
+					<a href="{{ blog.next_article_url }}">{{ lang.newer_post | def:'Newer Post'}} &rarr;</a>
+				</span>
+			{% endif %}
+		</p>
+		{% endif %}
+
+		{% if blog.comments_enabled %}
+
+		<hr>
+
+			{% paginate article.comments by 5 %}
+
+			{% comment %}
+				#comments is required, it is used as an anchor link by us.
+			{% endcomment %}
+			<div id="comments">
+			    <h3>{{ lang.comments_plural | def:'Comments'}}</h3>
+
+				{% if comment and comment.created_at %}
+				<p class="note form-success">
+					{% if blog.moderated %}
+					    {{ lang.comment_was_posted_successfully_but_moderated | def:'Your comment was posted successfully. We will publish it in a little while, as our blog is moderated.' }}
+					{% else %}
+					    {{ lang.comment_was_posted_successfully | def:'Your comment was posted successfully! Thank you!' }}
+					{% endif %}
+				</p>
+				{% endif %}
+
+				{% if number_of_comments > 0 %}
+					<ul>
+						{% comment %}
+							If a comment was just submitted with no blank field, show it.
+						{% endcomment %}
+						{% if comment and comment.status != 'published' %}
+						<li id="{{ comment.id }}" class="comment first{% if article.comments_count == 0 %} last{% endif %}">
+
+							{% include 'comment' %}
+
+						</li>
+						{% endif %}
+
+						{% comment %}
+							Showing the rest of the comments.
+						{% endcomment %}
+						{% for comment in article.comments %}
+						<li id="{{ comment.id }}" class="comment{% unless number_of_comments > article.comments_count %}{% if forloop.first %} first{% endif %}{% endunless %}{% if forloop.last %} last {% endif %}">
+
+							{% include 'comment' %}
+
+						</li>
+						{% endfor %}
+
+					</ul>
+
+					{% if paginate.pages > 1 %}
+					<hr>
+					<div class="text-center">
+						{% include 'pagination-custom' with '#comments' %}
+					</div>
+					{% endif %}
+
+					<hr>
+
+				{% endif %}
+
+				{% comment %}
+					Comment submission form
+				{% endcomment %}
+				{% form article_comment %}
+
+					{% comment %}
+						#add-comment-title is used simply as an anchor link
+					{% endcomment %}
+					<h3 id="add-comment-title">{{ lang.leave_a_comment | def:'Leave a comment' }}</h3>
+
+					{% include 'form-errors-custom' %}
+
+					<div class="grid">
+
+						<div class="grid-item large--one-half">
+							<label for="comment-author" class="hidden-label">{{ lang.name | def:'Name' }}</label>
+							<input {% if form.errors contains "author" %} class="error"{% endif %} type="text" name="comment[author]" placeholder="{{ lang.name | def:'Name' | escape }}" id="comment-author" value="{{ form.author }}" autocapitalize="words">
+
+							<label for="comment-email" class="hidden-label">{{ lang.email | def:'E-mail' }}</label>
+							<input {% if form.errors contains "email" %} class="error"{% endif %} type="email" name="comment[email]" placeholder="{{ lang.email | def:'E-mail' | escape }}" id="comment-email" value="{{ form.email }}" autocorrect="off" autocapitalize="off">
+						</div>
+
+						<div class="grid-item">
+							<label for="comment-body" class="hidden-label">{{ lang.message | def:'Message' }}</label>
+							<textarea {% if form.errors contains "body" %} class="error"{% endif %} name="comment[body]" id="comment-body" placeholder="{{ lang.message | def:'Message' | escape }}">{{ form.body }}</textarea>
+						</div>
+
+					</div>
+
+					<input type="submit" class="btn" value="{{ lang.post_comment | def:'Post Comment' }}">
+
+					{% if form.errors %}
+						<script>
+							window.location.hash = '#add-comment-title';
+						</script>
+					{% endif %}
+
+					{% if form.posted_successfully? %}
+						<script>
+							window.location.hash = '#comments';
+						</script>
+					{% endif %}
+
+				{% endform %}
+
+			</div>
+
+			{% endpaginate %}
+
+		{% endif %}
+
+	</article>
+
+	<aside class="grid-item large--one-quarter" role="complementary">
+		{% include 'blog-sidebar' %}
+	</aside>
+</div>

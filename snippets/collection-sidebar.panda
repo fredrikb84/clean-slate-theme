@@ -1,0 +1,89 @@
+{% comment %}
+
+	Side navigation for the product types, vendors, and tags.
+	These can be based on the current collection or all products. Details in comments below.
+	
+{% endcomment %}
+
+{% comment %}
+	Product types in the current collection
+		- List all of the shop's types with collections.all.all_types
+		- List the current collection's types with collection.all_types
+{% endcomment %}
+{% if collection.all_types.size > 1 %}
+<h3>{{ lang.product_types | def:'Product Types' }}</h3>
+	<ul>
+	    <li{% unless current_type %} class="active-filter"{% endunless %}>
+            <a href="{{ collection.url | url_to_remove_type }}">{{ lang.all | def:'All' }}</a>
+		</li>
+		{% for type in collection.all_types %}
+			{% if current_type == type %}
+				<li class="active-filter">
+					{{ type | link_to_remove_type: type }}
+				</li>
+			{% else %}
+				<li>
+					{{ type | link_to_type }}
+				</li>
+			{% endif %}
+		{% endfor %}
+	</ul>
+{% endif %}
+
+{% comment %}
+	Product vendors in the current collection
+		- List all of the shop's vendors with collections.all.all_vendors
+		- List the current collection's vendors with collection.all_vendors
+{% endcomment %}
+{% if collection.all_vendors.size > 1 %}
+<h3>{{ lang.vendors | def:'Vendors' }}</h3>
+	<ul>
+	    <li{% unless current_vendor %} class="active-filter"{% endunless %}>
+            <a href="{{ collection.url | url_to_remove_vendor }}">{{ lang.all | def:'All' }}</a>
+		</li>
+		{% for vendor in collection.all_vendors %}
+			{% if current_vendor == vendor %}
+				<li class="active-filter">
+					{{ vendor | link_to_remove_vendor: vendor }}
+				</li>
+			{% else %}
+				<li>
+					{{ vendor | link_to_vendor }}
+				</li>
+			{% endif %}
+		{% endfor %}
+	</ul>
+{% endif %}
+
+{% comment %}
+	Product tags in the current collection
+{% endcomment %}
+{% if collection.tags.size > 0 %}
+<h3>{{ lang.tags | def:'Tags' }}</h3>
+
+	<ul>
+		<li{% unless current_tags %} class="active-filter"{% endunless %}>
+            <a href="{{ collection.url | url_to_remove_tags }}">{{ lang.all | def:'All' }}</a>
+		</li>
+
+		{% comment %}
+			And for the good stuff, loop through the tags themselves.
+		{% endcomment %}
+		{% for tag in collection.tags %}
+			{% if current_tags contains tag %}
+				<li class="active-filter">
+					{{ tag | link_to_remove_tag: tag }}
+				</li>
+			{% else %}
+				<li>
+					{% comment %}
+						Use link_to_add_tag if you want to allow filtering
+						by multiple tags
+					{% endcomment %}
+					{{ tag | link_to_tag: tag }}
+				</li>
+			{% endif %}
+		{% endfor %}
+
+	</ul>
+{% endif %}

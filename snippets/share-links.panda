@@ -1,0 +1,54 @@
+<div class="social-sharing" data-permalink="{{ canonical_url }}">
+
+  {% if settings.share_facebook %}
+    <a target="_blank" href="//www.facebook.com/sharer.php?u={{ canonical_url }}" class="share-facebook">
+      <i class="panda-icon-social-facebook-square"></i>
+      <span class="share-title">Share</span>
+      {% if settings.social_sharing_count %}
+        <span class="share-count">0</span>
+      {% endif %}
+    </a>
+  {% endif %}
+
+  {% if settings.share_twitter %}
+    <a target="_blank" href="//twitter.com/share?url={{ canonical_url }}&amp;text={{ meta_title }}" class="share-twitter">
+      <i class="panda-icon-social-twitter"></i>
+      <span class="share-title">Tweet</span>
+      {% if settings.social_sharing_count %}
+        <span class="share-count">0</span>
+      {% endif %}
+    </a>
+  {% endif %}
+
+  {% if template contains 'product' %}
+
+    {% if settings.share_pinterest %}
+      <a target="_blank" href="//pinterest.com/pin/create/button/?url={{ canonical_url }}&amp;media=http:{{ product.featured_image | product_img_url: 'original' }}&amp;description={{ product.title | escape }}" class="share-pinterest">
+        <i class="panda-icon-social-pinterest-alt"></i>
+        <span class="share-title">Pin it</span>
+        {% if settings.social_sharing_count %}
+            <span class="share-count">0</span>
+        {% endif %}
+      </a>
+    {% endif %}
+    
+    {% if settings.share_fancy %}
+        <a target="_blank" href="//www.thefancy.com/fancyit?ItemURL={{ canonical_url }}&amp;Title={{ meta_title }}&amp;Category=Other&amp;ImageUrl=http:{{ product.featured_image | product_img_url: 'original' }}" class="share-fancy">
+            <i class="panda-icon-social-fancy"></i>
+            <span class="share-title">Fancy</span>
+        </a>
+    {% endif %}
+
+  {% endif %}
+
+  {% if settings.share_google %}
+    <a target="_blank" href="//plus.google.com/share?url={{ canonical_url }}" class="share-google">
+      <i class="panda-icon-social-googleplus"></i>
+      <span class="share-title">Google+</span>
+      {% if settings.social_sharing_count %}
+        <span class="share-count">0</span>
+      {% endif %}
+    </a>
+  {% endif %}
+
+</div>

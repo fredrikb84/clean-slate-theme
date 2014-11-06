@@ -1,0 +1,58 @@
+<div class="grid">
+
+	<div class="grid-item large--two-thirds push--large--one-sixth">
+
+		<h1>{{ page.h1_title }}</h1>
+
+		{% comment %}
+			Regular page content goes here.
+		{% endcomment %}
+		<div class="rte">
+			{{ page.content }}
+		</div>
+
+		{% comment %}
+			Contact form starts here
+		{% endcomment %}
+		<div>
+			{% form 'contact' id:'contact-form' %}
+
+				{% comment %}
+					Successful message
+				{% endcomment %}
+				{% if form.posted_successfully %}
+					<p class="note form-success">
+					    {{ lang.thanks_for_contacting_us | def: "Thanks for contacting us! We'll get back to you as soon as possible." }}
+					</p>
+				{% endif %}
+
+				{% include 'form-errors-custom' %}
+				
+				{% if form.posted_successfully or form.errors %}
+				<script>
+				    location.hash = '#contact-form';
+				</script>
+				{% endif %}
+
+				<div id="contactFormWrapper">
+					<label for="contactFormName" class="hidden-label">{{ lang.name | def: 'Name' }}</label>
+					<input type="text" id="contactFormName" required name="contact[name]" placeholder="{{ lang.name | def: 'Name' | escape }}" autocapitalize="words" value="{% if form.name %}{{ form.name }}{% elseif customer %}{{ customer.name }}{% endif %}">
+
+					<label for="contactFormEmail" class="hidden-label">{{ lang.email | def: 'E-mail' }}</label>
+					<input type="email" id="contactFormEmail" required name="contact[email]" placeholder="{{ lang.email | def: 'E-mail' | escape }}" autocorrect="off" autocapitalize="off" value="{% if form.email %}{{ form.email }}{% elseif customer %}{{ customer.email }}{% endif %}">
+
+					<label for="contactFormPhone" class="hidden-label">{{ lang.phone | def: 'Phone' }}</label>
+					<input type="tel" id="contactFormPhone" name="contact[phone]" placeholder="{{ lang.phone | def: 'Phone' | escape }}" pattern="[0-9]*" value="{% if form.phone %}{{ form.phone }}{% elseif customer %}{{ customer.default_address.phone }}{% endif %}">
+
+					<label for="contactFormMessage" class="hidden-label">{{ lang.message | def: 'Message' }}</label>
+					<textarea rows="10" id="contactFormMessage" required name="contact[body]" placeholder="{{ lang.message | def: 'Message' | escape }}">{% if form.body %}{{ form.body }}{% endif %}</textarea>
+
+					<input type="submit" class="btn right" value="{{ lang.submit | def: 'Send' | escape }}">
+				</div>
+
+			{% endform %}
+		</div>
+
+	</div>
+
+</div>

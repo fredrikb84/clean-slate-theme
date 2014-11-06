@@ -1,0 +1,95 @@
+{% assign myaccount_title = lang.my_account | def:'My Account' %}
+{% title myaccount_title %}
+{% include 'breadcrumbs'%}
+<h1>{{ lang.my_account | def:'My Account'}}</h1>
+<hr class="hr--small">
+<div class="grid">
+    <div class="grid-item two-thirds medium-down--one-whole">
+    <h4>{{ lang.order_history | def:'Order History' }}</h4>
+    {% comment %}
+    If we have past orders, loop through each one
+    {% endcomment %}
+    {% if customer.orders.size != 0 %}
+        <table class="full">
+            <thead>
+                <tr>
+                    <th>{{ lang.order | def:'Order' }}</th>
+                    <th>{{ lang.date | def:'Date' }}</th>
+                    <th>{{ lang.payment_status | def:'Payment Status' }}</th>
+                    <th>{{ lang.fulfillment_status | def:'Fulfillment Status' }}</th>
+                    <th>{{ lang.grandtotal | def:'Grand total' }}</th>
+                </tr>
+            </thead>
+            <tbody>
+            {% for order in customer.orders %}
+            <tr>
+                <td>{{ order.name | link_to: order.customer_url }}</td>
+                <td>{{ order.created_at | date: "Y-m-d" }}</td>
+                <td>
+                    {% case order.financial_status %}
+                        {% when 'authorized' %}
+                            {{ lang.authorized | def:'Authorized' }}
+                        {% when 'pending' %}
+                            {{ lang.pending | def:'Pending' }}
+                        {% when 'partially_paid' %}
+                            {{ lang.partially_paid | def:'Partially Paid' }}
+                        {% when 'paid' %}
+                            {{ lang.paid | def:'Paid' }}
+                        {% when 'voided' %}
+                            {{ lang.voided | def:'Voided' }}
+                        {% when 'refunded' %}
+                            {{ lang.refunded | def:'Refunded' }}
+                        {% when 'partially_refunded' %}
+                            {{ lang.partially_refunded | def:'Partially Refunded' }}
+                    {% endcase %}
+                </td>
+                <td>
+                    {% case order.fulfillment_status %}
+                        {% when 'fulfilled' %}
+                            {{ lang.fulfilled | def:'Fulfilled' }}
+                        {% when 'partial' %}
+                            {{ lang.partially_fulfilled | def:'Partially Fulfilled' }}
+                        {% else %}
+                            {{ lang.unfulfilled | def:'Unfulfilled' }}
+                    {% endcase %}
+                </td>
+                <td>{{ order.total_price | money }}</td>
+            </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    {% else %}
+        <p>{{ lang.you_havent_placed_any_orders_yet | def:"You haven't placed any orders yet." }}</p>
+    {% endif %}
+    </div>
+    <div class="grid-item one-third medium-down--one-whole">
+        <h4>{{ lang.account_details | def:'Account Details' }}</h4>
+        <h5>{{ customer.name }}</h5>
+        {% if customer.default_address != nil %}
+            <p>
+            {{ customer.default_address.address1 }}<br>
+            {% if customer.default_address.address2 != "" %}
+                {{ customer.default_address.address2 }}<br>
+            {% endif %}
+            {% if customer.default_address.city != "" %}
+                {{ customer.default_address.city }}<br>
+            {% endif %}
+            {% if customer.default_address.province_code != "" %}
+                {{ customer.default_address.province_code }}<br>
+            {% endif %}
+            {% if customer.default_address.zip != "" %}
+                {{ customer.default_address.zip | upcase }}<br>
+            {% endif %}
+            {% if customer.default_address.country_code != "" %}
+                {{ customer.default_address.country_code }}<br>
+            {% endif %}
+            {% if customer.default_address.phone != "" %}
+                {{ customer.default_address.phone }}
+            {% endif %}
+            </p>
+        {% endif %}
+        <p>
+            <a href="/{{ shop.handles.account }}/addresses">{{ lang.view_addresses | def:'View Addresses' }} ({{ customer.addresses_count }})</a>
+        </p>
+    </div>
+</div>
