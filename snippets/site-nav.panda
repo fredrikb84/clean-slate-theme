@@ -2,7 +2,7 @@
 List out your main-menu linklist (default)
 More info on linklists:
 {% endcomment %}
-<ul class="site-nav" id="accessibleNav">
+<ul class="site-nav">
 	{% for link in linklists.main-menu.links %}
 		{% comment %}
 			Create a dropdown menu by naming a linklist the same as a link in the parent nav
