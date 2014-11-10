@@ -30,7 +30,7 @@
     <a href="{{ settings.tumblr_url }}" title="{{ lang.tumblr_title | def: 'Come visit our blog' | escape }}" target="_blank"><span class="panda-icon-social-tumblr{{ settings.social_icons_style }}{% if settings.social_icons_color %} color{% endif%}"></span></a>
     {% endunless %}
     {% unless settings.featured_blog == blank %}
-    <a href="/blogs/{{ settings.featured_blog }}.atom" title="{{ lang.blog_feed_title | def: 'Subscribe to our blog' | escape }}" target="_blank"><span class="panda-icon-social-feed{{ settings.social_icons_style }}{% if settings.social_icons_color %} color{% endif%}"></span></a>
+    <a href="/{{ shop.handles.blog }}/{{ settings.featured_blog }}.atom" title="{{ lang.blog_feed_title | def: 'Subscribe to our blog' | escape }}" target="_blank"><span class="panda-icon-social-feed{{ settings.social_icons_style }}{% if settings.social_icons_color %} color{% endif%}"></span></a>
     {% endunless %}
     {% if settings.display_email_icon %}
     <a href="mailto:{{ shop.email }}" title="{{ lang.email_us | def: 'Email us' | escape }}" target="_blank"><span class="panda-icon-social-email{{ settings.social_icons_style }}{% if settings.social_icons_color %} color{% endif%}"></span></a>
