@@ -1,5 +1,6 @@
 {% if collection.products_count > 1 %}
     <div class="form-horizontal">
+        <label class="small--hide" for="sortBy">{{ lang.sort_by | def:'Sort by' }}</label>
         <select id="sortBy">
             <option value="manual">{{ lang.featured | def:'Featured' }}</option>
             <option value="price-asc">{{ lang.price_low_to_high | def:'Price, low to high' }}</option>
