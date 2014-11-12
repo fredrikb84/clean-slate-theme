@@ -13,7 +13,7 @@
     <meta name="twitter:description" content="{{ product.description | strip_html | strip_newlines | truncatewords: 60, '' | escape }}" />
     <meta name="twitter:image" content="http:{{ product | product_img_url: 'large' }}" />
     <meta name="twitter:label1" content="Price" />
-    <meta name="twitter:data1" content="{% if product.price_varies %}From {% endif %}{{ product.price | money_with_currency | strip_html }}" />
+    <meta name="twitter:data1" content="{% if product.price_varies %}{{ lang.from | def:'From' }} {% endif %}{{ product.price | money_with_currency | strip_html }}" />
     <meta name="twitter:label2" content="Brand" />
     <meta name="twitter:data2" content="{{ product.vendor | escape }}" />
 {% elseif template contains 'article' %}
