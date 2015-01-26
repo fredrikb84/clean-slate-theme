@@ -516,6 +516,11 @@ hr {
 	li {
 		margin-bottom: 0.4em;
 	}
+
+	img {
+	    max-width: 100%;
+	    height:auto!important;
+	}
 }
 
 .rte-header {

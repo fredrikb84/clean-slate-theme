@@ -16,6 +16,11 @@
         {% if meta_keywords %}
         <meta name="keywords" content="{{ meta_keywords | escape }}" />
         {% endif %}
+        {% if shops.size > 1 %}
+            {% for store in shops %}
+                <link rel="alternate" hreflang="{{ store.language }}" href="{{ store.url }}" />
+            {% endfor %}
+        {% endif %}
         <link rel="canonical" href="{{ canonical_url }}" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         {% include 'open-graph-tags' %}
@@ -175,7 +180,20 @@
         			{% endif %}
         		</div>
         
-        		
+                {% comment %}
+                    Show link to other stores if connected to multiple.
+                {% endcomment %}
+        		{% if shops.size > 1 %}
+                    <div class="text-center">
+                        {% for store in shops %}
+                            <a href="{{ store.language }}">{{ store.language }}</a>
+                            {% unless forloop.last %}
+                                &ndash;
+                            {% endunless %}
+                        {% endfor %}
+                    </div>
+                    <hr class="hr--clear">
+                {% endif %}
         
                 {% if shop.enabled_payment_icons.size > 0 %}
                     <div class="text-center payment-icons">
