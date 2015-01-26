@@ -506,7 +506,7 @@ hr {
 	}
 
 	ul, ol {
-		margin-left: 35px;
+		margin-left: 35px; 
 	}
 
 	ul {
@@ -519,7 +519,7 @@ hr {
 
 	img {
 	    max-width: 100%;
-	    height:auto!important;
+	    height:auto;
 	}
 }
 

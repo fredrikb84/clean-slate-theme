@@ -1,7 +1,7 @@
 {% if search.performed %}
-    {% assign search_title = settings.lang_your_search_for | def:'Your search for "%s"' | insert: search.terms %}
+    {% assign search_title = lang.your_search_for | def:'Your search for "%s"' | insert: search.terms %}
 {% else %}
-    {% assign search_title = settings.lang_search_our_store | def:'Search our store' %}
+    {% assign search_title = lang.search_our_store | def:'Search our store' %}
 {% endif %}
 {% title search_title %}
 <div class="grid">
@@ -18,12 +18,12 @@
 				
 				{% if search.results_count == 0 %}
 
-					<h1 class="h2 text-center">{{ settings.lang_search_for_x_no_results | def: 'Your search for "%s" did not yield any results.' | insert: search.terms }}</h1>
+					<h1 class="h2 text-center">{{ lang.search_for_x_no_results | def: 'Your search for "%s" did not yield any results.' | insert: search.terms }}</h1>
 					{% include 'search-bar' %}
 
 				{% else %}
 
-					<h1 class="h2 text-center">{{ settings.lang_search_for_x_found_following | def: 'Your search for "%s" revealed the following:' | insert: search.terms }}</h1>
+					<h1 class="h2 text-center">{{ lang.search_for_x_found_following | def: 'Your search for "%s" revealed the following:' | insert: search.terms }}</h1>
                     {% include 'search-bar' %}
 
 					{% for item in search.results %}
@@ -69,7 +69,7 @@
 				the q parameter, or it was blank.
 				Be sure to show a search form here, along with anything else you want to showcase.
 			{% endcomment %}
-			<h1 class="h2 text-center">{{ settings.lang_search_our_store | def:'Search our store' }}</h1>
+			<h1 class="h2 text-center">{{ lang.search_our_store | def:'Search our store' }}</h1>
 			{% include 'search-bar' %}
 
 		{% endif %}
