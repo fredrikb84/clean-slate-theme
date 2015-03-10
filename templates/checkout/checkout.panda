@@ -46,8 +46,8 @@
         	{% else %}
         	    <div class="note form-success">
             		{{ lang.discount_code }}:
-            		{{ form.checkout.discount_code.title }}
-            		= <strong>{{ form.checkout.discount_code.savings | money }}</strong>
+            		{{ form.checkout.discount_code }}
+            		= <strong>{{ form.checkout.discount_code_savings | money }}</strong>
         		</div>
         	{% endif %}
         	<hr class="hr--small" />
