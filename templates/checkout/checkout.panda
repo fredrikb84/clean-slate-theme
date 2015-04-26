@@ -152,6 +152,17 @@
             {{ form.shipping_methods }}
         	<hr class="hr--clear" />
         {% endif %}
+
+        {% if form.hide_purchase_btn %}
+            {% unless shop.checkout.newsletter == 'disabled' %}
+            <div class="grid-item large--two-thirds">
+                <p>
+                    {{ form.marketing_checkbox_label }}
+                </p>
+            </div>
+            <hr class="hr--clear" />
+            {% endunless %}
+        {% endif %}
         
         {{ form.payment_methods_extra }}
         
