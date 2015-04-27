@@ -154,7 +154,7 @@
         {% endif %}
 
         {% if form.hide_purchase_btn %}
-            {% unless shop.checkout.newsletter == 'disabled' %}
+            {% unless shop.checkout.newsletter == 'disabled' and form.hide_marketing %}
             <div class="grid-item large--two-thirds">
                 <p>
                     {{ form.marketing_checkbox_label }}
