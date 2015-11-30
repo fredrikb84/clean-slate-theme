@@ -21,6 +21,23 @@
                 <link rel="alternate" hreflang="{{ store.language }}" href="{{ store.url }}" />
             {% endfor %}
         {% endif %}
+        {% comment %}The following is used for hreflang linking between stores sharing the same objects{% endcomment %}
+        {% if shops.size > 1 %}
+            {% for store in shops %}
+                {% capture sitehandle %}site{{ store.id }}{% endcapture %}
+                {% if template contains 'product' %}
+                    {% if product.sales_channels[sitehandle] %}
+                    <link rel="alternate" hreflang="{{ store.locale }}" href="{{ store.url }}/{{ store.handles.product }}/{{ product.handles[store.locale] }}" />
+                    {% endif %}
+                {% elseif template contains 'collection' %}
+                    {% if collection.sales_channels[sitehandle] %}
+                    <link rel="alternate" hreflang="{{ store.locale }}" href="{{ store.url }}/{{ store.handles.collection }}/{{ collection.handles[store.locale] }}" />
+                    {% endif %}
+                {% elseif template contains 'index' %}
+                    <link rel="alternate" hreflang="{{ store.locale }}" href="{{ store.url }}" />
+                {% endif %}
+            {% endfor %}
+        {% endif %}
         <link rel="canonical" href="{{ canonical_url }}" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         {% include 'open-graph-tags' %}

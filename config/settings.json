@@ -1,0 +1,336 @@
+{
+    "unique_theme_id":"clean-slate",
+    "description":"Theme settings allow designers to provide an easy way for any user to customize the look and feel of their shop without having to delve into HTML or CSS code. Please see our <a href=\"http://support.pandacommerce.net/hc/en-us/articles/201315805-Theme-Settings\" target=\"_blank\">help page on theme settings</a> to learn more about how you can make your theme customizable.",
+    "colors":{
+        "caption":"Colors",
+        "type":"section",
+        "settings":{
+            "general_colors":{ 
+                "caption":"General Colors",
+                "type":"header"
+            },
+            "color_primary":{
+                "caption":"Primary Color",
+                "type":"color",
+                "default":"#204a80",
+                "description":"Used for text links and primary buttons"
+            },
+            "color_secondary":{
+                "caption":"Secondary Color",
+                "type":"color",
+                "default":"#dcdcdc",
+                "description":"Used for secondary buttons"
+            },
+            "color_body_bg":{
+                "caption":"Body Background",
+                "type":"color",
+                "default":"#ffffff"
+            },
+            "color_borders":{
+                "caption":"Border color",
+                "type":"color",
+                "default":"#e5e5e5"
+            },
+            "body_colors":{ 
+                "caption":"Body",
+                "type":"header"
+            },
+            "color_body_text":{
+                "caption":"Body Text",
+                "type":"color",
+                "default":"#333333"
+            },
+            "footer_colors":{ 
+                "caption":"Footer",
+                "type":"header"
+            },
+            "color_footer_bg":{
+                "caption":"Footer background",
+                "type":"color",
+                "default":"#f2f2f2"
+            },
+            "color_footer_text":{
+                "caption":"Footer text",
+                "type":"color",
+                "default":"#636363"
+            },
+            "color_footer_social_link":{
+                "caption":"Social Links",
+                "type":"color",
+                "default":"#bbbbbb"
+            }
+        }
+    },
+    "typography":{
+        "caption":"Typography",
+        "type":"section",
+        "settings":{
+            "base_font_family":{
+                "caption":"Typeface",
+                "type":"font",
+                "extra_fonts":[
+                    "'Source Sans Pro', sans-serif"
+                ]
+            },
+            "base_font_size":{
+                "caption":"Base font size",
+                "type":"select",
+                "options":[
+                    {"value":"13px","caption":"13px"},
+                    {"value":"14px","caption":"14px"},
+                    {"value":"15px","caption":"15px"},
+                    {"value":"16px","caption":"16px"}
+                ]
+            }
+        }
+    },
+    "header":{
+        "caption":"Header",
+        "type":"section",
+        "settings":{
+            "logo_options":{
+                "caption":"Logo Options",
+                "type":"header"
+            },
+            "logo_use_image":{
+                "caption":"Use Custom Logo",
+                "type":"checkbox",
+                "default":false
+            },
+            "logo_image":{
+                "caption":"Custom Logo",
+                "type":"asset",
+                "filename":"logo.png",
+                "max-width":1200,
+                "max-height":1200,
+                "description":"Recommend the optimal width and height for your logo here."
+            },
+            "favicon":{
+                "caption":"Favicon",
+                "type":"header"
+            },
+            "favicon_enable":{
+                "caption":"Enable custom favicon",
+                "type":"checkbox",
+                "default":false
+            },
+            "favicon_image":{
+                "caption":"Favicon",
+                "type":"asset",
+                "filename":"favicon.png",
+                "max-width":32,
+                "max-height":32,
+                "description":"32px x 32px png"
+            }
+        }
+    },
+    "social_media":{
+        "caption":"Social Media",
+        "type":"section", 
+        "settings":{
+            "share_links":{
+                "caption":"Share links",
+                "type":"header"
+            },
+            "social_sharing_count":{
+                "caption":"Display sharing count",
+                "type":"checkbox",
+                "default":false
+            },
+            "share_facebook":{
+                "caption":"Share on Facebook",
+                "type":"checkbox",
+                "default":true
+            },
+            "share_twitter":{
+                "caption":"Share on Twitter",
+                "type":"checkbox",
+                "default":true
+            },
+            "share_pinterest":{
+                "caption":"Share on Pinterest",
+                "type":"checkbox",
+                "default":true
+            },
+            "share_google":{
+                "caption":"Share on Google+",
+                "type":"checkbox",
+                "default":true
+            },
+            "social_links":{
+                "caption":"Social links",
+                "type":"header",
+                "description":"All links, except the email one, must begin with <i>http://</i>, <i>https://</i> or <i>//</i>. The email must be your email address with no <i>mailto:</i> prefix. Leave the text box blank if you don't want to use the corresponding icon."
+            },
+            "facebook_url":{
+                "caption":"Facebook URL",
+                "type":"text"
+            },
+            "twitter_url":{
+                "caption":"Twitter URL",
+                "type":"text"
+            },
+            "pinterest_url":{
+                "caption":"Pinterest URL",
+                "type":"text"
+            },
+            "googleplus_url":{
+                "caption":"Google+ URL",
+                "type":"text"
+            },
+            "flickr_url":{
+                "caption":"Flickr URL",
+                "type":"text"
+            },
+            "instagram_url":{
+                "caption":"Instagram URL",
+                "type":"text"
+            },
+            "linkedin_url":{
+                "caption":"LinkedIn URL",
+                "type":"text"
+            },
+            "vimeo_url":{
+                "caption":"Vimeo URL",
+                "type":"text"
+            },
+            "vimeo_url":{
+                "caption":"Vimeo URL",
+                "type":"text"
+            },
+            "youtube_url":{
+                "caption":"YouTube URL",
+                "type":"text"
+            },
+            "tumblr_url":{
+                "caption":"Tumblr URL",
+                "type":"text"
+            },
+            "featured_blog":{
+                "caption":"Blog Feed",
+                "type":"blog",
+                "default":"news"
+            },
+            "display_email_icon":{
+                "caption":"Display e-mail icon",
+                "type":"checkbox",
+                "default":true
+            },
+            "social_icons_style":{
+                "caption":"Social icons style",
+                "type":"select",
+                "options":[
+                    {"value":"","caption":"Silhouette"},
+                    {"value":"-circle","caption":"Circle"},
+                    {"value":"-rounded","caption":"Rounded corners"},
+                    {"value":"-square","caption":"Square"}
+                ]
+            },
+            "social_icons_color":{
+                "caption":"Color social icons",
+                "type":"checkbox",
+                "default":false
+            }
+        }
+    },
+    "footer":{
+        "caption":"Footer",
+        "type":"section",
+        "settings":{
+            "quick_links":{
+                "caption":"Quick links",
+                "type":"header"
+            },
+            "footer_quicklinks_enable":{
+                "caption":"Show quick links",
+                "type":"checkbox",
+                "default":true
+            },
+            "footer_quicklinks_linklist":{
+                "caption":"Quick links link list",
+                "type":"linklist",
+                "default":"footer"
+            },
+            "social_media":{
+                "caption":"Social Media",
+                "type":"header"
+            },
+            "footer_social_enable":{
+                "caption":"Show social media links",
+                "type":"checkbox",
+                "default":false
+            },
+            "newsletter_form":{
+                "caption":"Newsletter form",
+                "type":"header"
+            },
+            "footer_newsletter_enable":{
+                "caption":"Show Newsletter Field",
+                "type":"checkbox",
+                "default":false
+            }
+        }
+    },
+    "homepage":{
+        "caption":"Homepage",
+        "type":"section",
+        "settings":{
+            "content":{
+                "caption":"Content",
+                "type":"header"
+            },
+            "homepage_page":{
+                "caption":"Show content from this page",
+                "type":"page",
+                "default":"welcome"
+            },
+            "show_collection":{
+                "caption":"Show collection",
+                "type":"header"
+            },
+            "homepage_collection":{
+                "caption":"Feature products from this collection",
+                "type":"collection",
+                "default":"frontpage"
+            },
+            "blog":{
+                "caption":"Blog",
+                "type":"header"
+            },
+            "homepage_blog":{
+                "caption":"Display news from blog on homepage",
+                "type":"collection",
+                "default":"news"
+            }
+        }
+    },
+    "products":{
+        "caption":"Products",
+        "type":"section",
+        "settings":{
+        }
+    },
+    "collections":{
+        "caption":"Collections",
+        "type":"section",
+        "settings":{
+        }
+    },
+    "blogs":{
+        "caption":"Blogs",
+        "type":"section",
+        "settings":{
+        }
+    },
+    "cart":{
+        "caption":"Cart",
+        "type":"section",
+        "settings":{
+            "cart_notes_enable":{
+                "caption":"Enable personal message in cart",
+                "type":"checkbox",
+                "default":true
+            }
+        }
+    }
+}
