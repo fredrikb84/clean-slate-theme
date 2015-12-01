@@ -299,7 +299,7 @@
             },
             "homepage_blog":{
                 "caption":"Display news from blog on homepage",
-                "type":"collection",
+                "type":"blog",
                 "default":"news"
             }
         }
